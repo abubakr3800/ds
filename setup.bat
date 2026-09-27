@@ -52,7 +52,7 @@ echo Setup complete!
 echo ==========================================
 echo.
 echo To start the development server, run:
-echo   php -S localhost:8000
+echo   php -S localhost:8000 index.php
 echo.
 echo Then open: http://localhost:8000
 echo.

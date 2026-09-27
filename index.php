@@ -3,8 +3,10 @@
  * SC Datasheet Generator — Main Root Entry Point
  *
  * Routes all requests through this single entry file at the project root.
- * Supports both root domain deployment (/) and subdirectory deployment (/ds/, /sub/path/, etc.).
- * Serves frontend HTML, static assets, images, and API endpoints.
+ * Supports:
+ *  1. PHP Built-in Development Server: php -S localhost:8000 index.php
+ *  2. Production Subdirectory: https://example.com/ds/
+ *  3. Production Domain Root:  https://example.com/
  */
 
 // Error reporting for development
@@ -18,17 +20,35 @@ define('APP_DIR', BASE_DIR . '/app');
 define('ASSETS_DIR', BASE_DIR . '/assets');
 define('IMAGES_DIR', APP_DIR . '/images');
 
+// Fast-path for PHP built-in web server (php -S localhost:8000 index.php):
+// If the requested URI matches an existing file on disk, let PHP serve it natively.
+if (php_sapi_name() === 'cli-server') {
+    $urlPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+    $staticFile = BASE_DIR . $urlPath;
+    if ($urlPath !== '/' && $urlPath !== '/index.php' && is_file($staticFile)) {
+        return false; // Built-in server serves this file directly
+    }
+}
+
 // Load Composer autoloader if present
 if (file_exists(BASE_DIR . '/vendor/autoload.php')) {
     require_once BASE_DIR . '/vendor/autoload.php';
 }
 
 // Determine web base directory if hosted in a subdirectory (e.g., /ds or /sub/folder)
-$cleanScriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
-$baseDirUrl = rtrim(str_replace('\\', '/', dirname($cleanScriptName)), '/');
-if ($baseDirUrl === '.' || $baseDirUrl === '/' || $baseDirUrl === '') {
-    $baseDirUrl = '';
+// Under cli-server, the app is always at the root of the server ('')
+$baseDirUrl = '';
+if (php_sapi_name() !== 'cli-server') {
+    $cleanScriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
+    // Check if SCRIPT_NAME points to a php script (e.g. /ds/index.php)
+    if (preg_match('/\.php$/i', $cleanScriptName)) {
+        $dir = rtrim(str_replace('\\', '/', dirname($cleanScriptName)), '/');
+        if ($dir !== '.' && $dir !== '/' && $dir !== '') {
+            $baseDirUrl = $dir;
+        }
+    }
 }
+
 if (!defined('WEB_BASE_URL')) {
     define('WEB_BASE_URL', $baseDirUrl);
 }

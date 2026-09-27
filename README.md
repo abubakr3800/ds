@@ -46,8 +46,9 @@ This is a PHP port of the SC Datasheet Generator, originally built with Python/F
 
 4. **Alternative: Use PHP built-in server (for development):**
    ```bash
-   cd public
-   php -S localhost:8000
+   php -S localhost:8000 index.php
+   # Or on Windows, double-click run.bat
+   # Or via Composer: composer start
    ```
 
    Then open: http://localhost:8000
