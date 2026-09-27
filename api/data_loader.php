@@ -54,6 +54,9 @@ function loadFixtures($forceReload = false) {
             foreach ($fixture['v'] as $j => &$variant) {
                 $variant['id'] = $j;
             }
+            if (!empty($fixture['v'][0]['images']['hero'])) {
+                $fixture['hero_image'] = $fixture['v'][0]['images']['hero'];
+            }
         }
     }
     unset($fixture, $variant); // Break references
