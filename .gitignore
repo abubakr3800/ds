@@ -1,0 +1,95 @@
+# ==============================================================================
+# Git Ignore for SC Datasheet Generator (PHP / Python / HTML to PDF)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# PHP & Composer Dependencies
+# ------------------------------------------------------------------------------
+/vendor/
+composer.phar
+
+# ------------------------------------------------------------------------------
+# Environment & Secret Configurations
+# ------------------------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+
+# ------------------------------------------------------------------------------
+# Generated PDFs & Build / Test Artifacts
+# ------------------------------------------------------------------------------
+# Ignore generated runtime/test PDFs, but keep reference samples in examples/
+/*.pdf
+/generated/
+/output/
+/output_pdfs/
+/downloads/
+!examples/*.pdf
+
+# ------------------------------------------------------------------------------
+# Temporary Files, Caches & Scratch Space
+# ------------------------------------------------------------------------------
+/cache/
+/tmp/
+/temp/
+/.temp/
+/scratch/
+*.tmp
+*.bak
+
+# ------------------------------------------------------------------------------
+# Python (Scripts, OCR, and Data Processing)
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ------------------------------------------------------------------------------
+# Logs & Diagnostics
+# ------------------------------------------------------------------------------
+*.log
+error_log
+php_errors.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ------------------------------------------------------------------------------
+# Operating System Artifacts
+# ------------------------------------------------------------------------------
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ------------------------------------------------------------------------------
+# IDEs & Code Editors
+# ------------------------------------------------------------------------------
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+*.bak

@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SC Datasheet Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sc-red: #eb1b26;
+  --sc-dark-red: #a40e16;
+  --sc-black: #000000;
+  --sc-white: #ffffff;
+  --sc-gray: #cccccc;
+
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #ebebeb;
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --text-muted: #666666;
+  --border-color: #dddddd;
+  --card-bg: #ffffff;
+  --card-border: #e0e0e0;
+  --section-bg: #f9f9f9;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #141414;
+  --bg-tertiary: #1e1e1e;
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --text-muted: #999999;
+  --border-color: #333333;
+  --card-bg: #1a1a1a;
+  --card-border: #2a2a2a;
+  --section-bg: #111111;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Header */
+.header {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 20px 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo img {
+  height: 40px;
+  width: auto;
+}
+
+.header-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 24px;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.header-right {
+  display: flex;
+  gap: 12px;
+}
+
+.theme-toggle {
+  background: var(--sc-red);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+
+.theme-toggle:hover {
+  background: var(--sc-dark-red);
+}
+
+/* Main container */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 10%;
+}
+
+/* Search & Filter Bar */
+.search-section {
+  margin-bottom: 40px;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 600px;
+  padding: 14px 18px;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--sc-red);
+}
+
+.filter-bar {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-bar select,
+.filter-bar button {
+  padding: 10px 14px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-bar select:hover,
+.filter-bar button:hover {
+  border-color: var(--sc-red);
+}
+
+.filter-bar button {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.filter-bar button:hover {
+  color: var(--sc-red);
+}
+
+.results-count {
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 8px 14px;
+  background: var(--section-bg);
+  border-radius: 6px;
+}
+
+/* Fixture Grid */
+.fixtures-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  border-color: var(--sc-red);
+  box-shadow: 0 8px 16px rgba(235, 27, 38, 0.15);
+  transform: translateY(-4px);
+}
+
+.card-header {
+  position: relative;
+  height: 200px;
+  background: var(--section-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.card-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--sc-red);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  opacity: 0.4;
+}
+
+.card-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  padding: 16px;
+  opacity: 1;
+}
+
+.card-body {
+  padding: 16px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-name {
+  font-weight: 500;
+  font-size: 16px;
+  margin: 0 0 12px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-specs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  flex-grow: 1;
+}
+
+.card-spec-item {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+}
+
+.spec-label {
+  font-weight: 500;
+}
+
+.spec-value {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-details,
+.btn-pdf {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn-details {
+  background: var(--sc-red);
+  color: white;
+}
+
+.btn-details:hover {
+  background: var(--sc-dark-red);
+}
+
+.btn-pdf {
+  background: var(--section-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-pdf:hover {
+  border-color: var(--sc-red);
+  color: var(--sc-red);
+}
+
+/* Preview Panel */
+.preview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 999;
+}
+
+.preview-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.preview-panel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100%;
+  max-width: 420px;
+  height: 100vh;
+  background: var(--card-bg);
+  border-left: 1px solid var(--border-color);
+  overflow-y: auto;
+  z-index: 1000;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-panel.active {
+  transform: translateX(0);
+}
+
+.preview-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.preview-header h2 {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--text-primary);
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.btn-close:hover {
+  color: var(--sc-red);
+}
+
+.preview-content {
+  padding: 20px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.preview-spec-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.preview-spec-item {
+  background: var(--section-bg);
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.preview-spec-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.preview-spec-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.preview-variant {
+  margin-bottom: 20px;
+}
+
+.preview-variant label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.preview-variant select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+}
+
+.preview-actions {
+  padding: 20px;
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
+  display: flex;
+  gap: 12px;
+}
+
+.btn-primary {
+  flex: 1;
+  padding: 12px 16px;
+  background: var(--sc-red);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: var(--sc-dark-red);
+}
+
+.btn-secondary {
+  flex: 1;
+  padding: 12px 16px;
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--sc-red);
+  color: var(--sc-red);
+}
+
+/* Datasheet (existing styles preserved) */
+.sheet {
+  border: 2px solid var(--sc-black);
+  margin: 0;
+  background: #fff;
+  color: #000;
+  display: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.sheet.show {
+  display: block;
+}
+
+.sheet-head {
+  background: var(--sc-black);
+  color: #fff;
+  padding: 24px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sheet-head .logo {
+  font-size: 22px;
+}
+
+.sheet-head .cat {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 12px;
+  color: var(--sc-gray);
+}
+
+.sheet-title {
+  padding: 24px 28px;
+  border-bottom: 3px solid var(--sc-red);
+}
+
+.sheet-title h2 {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+  font-size: 38px;
+  line-height: 1.1;
+  letter-spacing: 1.5px;
+  font-weight: 400;
+}
+
+.sheet-title .mfr {
+  font-size: 14px;
+  color: #666;
+  font-weight: 400;
+}
+
+.sec {
+  padding: 24px 28px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.sec h3 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 14px;
+  color: var(--sc-red);
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sec h3 .secno {
+  background: var(--sc-black);
+  color: #fff;
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+table.spec, table.dtable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+table.spec td, table.dtable td, table.dtable th {
+  border: 1px solid #ddd;
+  padding: 10px 14px;
+  vertical-align: top;
+}
+
+table.spec td:first-child {
+  width: 40%;
+  color: #333;
+  background: #f9f9f9;
+  font-weight: 500;
+}
+
+table.spec td:last-child {
+  color: #000;
+  font-weight: 400;
+}
+
+table.dtable th {
+  background: var(--sc-black);
+  color: #fff;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 14px;
+}
+
+.figs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.fig {
+  border: 2px dashed var(--border-color);
+  border-radius: 6px;
+  padding: 16px 10px;
+  text-align: center;
+  font-size: 12px;
+  color: #777;
+  background: repeating-linear-gradient(45deg, #fafafa, #fafafa 10px, #f2f2f2 10px, #f2f2f2 20px);
+}
+
+.fig.has-img {
+  border-style: solid;
+  background: #fff;
+  padding: 8px;
+}
+
+.fig img {
+  max-width: 100%;
+  max-height: 180px;
+  display: block;
+  margin: 0 auto 8px;
+  border: 1px solid var(--border-color);
+}
+
+.fig .fno {
+  color: var(--sc-red);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.footer {
+  padding: 16px 28px;
+  font-size: 11px;
+  color: #888;
+  border-top: 1px solid var(--border-color);
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 6%;
+  }
+
+  .header-right {
+    align-self: flex-end;
+  }
+
+  .container {
+    padding: 24px 6%;
+  }
+
+  .fixtures-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .preview-panel {
+    max-width: 100%;
+    width: 100%;
+    bottom: 0;
+    top: auto;
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+    transform: translateY(100%);
+  }
+
+  .preview-panel.active {
+    transform: translateY(0);
+  }
+
+  .search-input {
+    max-width: 100%;
+  }
+
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-bar select,
+  .filter-bar button {
+    width: 100%;
+  }
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 2000;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 90%;
+  max-width: 1000px;
+  max-height: 90vh;
+  background: var(--card-bg);
+  border-radius: 8px;
+  overflow: auto;
+  z-index: 2001;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.modal-overlay.active .modal-content {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.modal-header {
+  position: sticky;
+  top: 0;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2002;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--text-primary);
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.modal-close:hover {
+  color: var(--sc-red);
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <img class="logo" id="logoImg" src="/assets/images/logo.svg" alt="Short Circuit Company" style="height: 40px; width: auto;">
+    <h1 class="header-title">Datasheet Generator</h1>
+  </div>
+  <div class="header-right">
+    <button class="theme-toggle" id="themeToggle">🌙 Dark</button>
+  </div>
+</div>
+
+<!-- Main Container -->
+<div class="container">
+  <!-- Search Section -->
+  <div class="search-section">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search by name, power, or specs…"
+      id="searchInput"
+    >
+
+    <div class="filter-bar">
+      <select id="categoryFilter">
+        <option value="">All Categories</option>
+      </select>
+
+      <select id="sortFilter">
+        <option value="name">Sort: Name</option>
+        <option value="power">Sort: Power (High→Low)</option>
+        <option value="efficacy">Sort: Efficacy</option>
+      </select>
+
+      <button id="clearFilters">Clear Filters</button>
+      <div class="results-count"><span id="resultCount">0</span> fixtures</div>
+    </div>
+  </div>
+
+  <!-- Fixture Grid -->
+  <div class="fixtures-grid" id="fixturesGrid">
+    <!-- Cards will be generated here -->
+  </div>
+</div>
+
+<!-- Datasheet Modal -->
+<div class="modal-overlay" id="datasheetModal">
+  <div class="modal-content" style="max-width: 1050px; width: 95%; height: 92vh; display: flex; flex-direction: column; overflow: hidden;">
+    <div class="modal-header">
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <h2 id="modalTitle" style="margin: 0;">Datasheet</h2>
+        <select id="modalVariantSelect" style="padding: 5px 12px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary); font-size: 13px; font-weight: 500; outline: none;"></select>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button id="modalPrintBtn" class="btn-secondary" style="padding: 7px 14px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border-radius: 4px;">🖨️ Print</button>
+        <button id="modalPdfBtn" class="btn-primary" style="padding: 7px 16px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border-radius: 4px;">⬇ Download PDF</button>
+        <button class="modal-close" id="closeModal">×</button>
+      </div>
+    </div>
+    <div style="flex: 1; position: relative; background: #e5e7eb; overflow: hidden;">
+      <iframe id="datasheetFrame" style="width: 100%; height: 100%; border: none; background: #f0f0f0;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- Preview Overlay & Panel -->
+<div class="preview-overlay" id="previewOverlay"></div>
+<div class="preview-panel" id="previewPanel">
+  <div class="preview-header">
+    <h2 id="previewTitle">Fixture</h2>
+    <button class="btn-close" id="closePreview">×</button>
+  </div>
+  <div class="preview-content">
+    <div class="preview-spec-grid" id="previewSpecs"></div>
+    <div class="preview-variant">
+      <label for="variantSelect">Variant</label>
+      <select id="variantSelect"></select>
+    </div>
+  </div>
+  <div class="preview-actions">
+    <button class="btn-secondary" id="previewCancel">Cancel</button>
+    <button class="btn-primary" id="generateBtn">Generate Datasheet</button>
+  </div>
+</div>
+
+<script>
+const API_BASE = '/api';
+let DATA = null;
+let DATA_BY_ID = {};
+let selectedFixture = null;
+let selectedVariant = null;
+
+const searchInput = document.getElementById('searchInput');
+const categoryFilter = document.getElementById('categoryFilter');
+const sortFilter = document.getElementById('sortFilter');
+const clearBtn = document.getElementById('clearFilters');
+const resultCount = document.getElementById('resultCount');
+const themeToggle = document.getElementById('themeToggle');
+const grid = document.getElementById('fixturesGrid');
+const previewPanel = document.getElementById('previewPanel');
+const previewOverlay = document.getElementById('previewOverlay');
+const closePreview = document.getElementById('closePreview');
+const previewCancel = document.getElementById('previewCancel');
+const previewTitle = document.getElementById('previewTitle');
+const variantSelect = document.getElementById('variantSelect');
+const generateBtn = document.getElementById('generateBtn');
+const sheet = document.getElementById('sheet');
+const datasheetModal = document.getElementById('datasheetModal');
+const closeModal = document.getElementById('closeModal');
+const modalTitle = document.getElementById('modalTitle');
+
+// Load categories and fixtures from API
+async function loadCategories() {
+  const r = await fetch(`${API_BASE}/categories`);
+  if (!r.ok) throw new Error(`categories: HTTP ${r.status}`);
+  const { categories } = await r.json();
+  categories.forEach(c => {
+    categoryFilter.insertAdjacentHTML('beforeend', `<option value="${esc(c)}">${esc(c)}</option>`);
+  });
+}
+
+async function loadFixtures(category) {
+  const url = category ? `${API_BASE}/fixtures?category=${encodeURIComponent(category)}` : `${API_BASE}/fixtures`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`fixtures: HTTP ${r.status}`);
+  const { fixtures } = await r.json();
+  DATA = fixtures;
+  DATA_BY_ID = Object.fromEntries(fixtures.map(f => [f.id, f]));
+  renderCards(DATA);
+}
+
+// Load from JSON file (fallback if API fails)
+async function loadFromJSON() {
+  const r = await fetch('../data/fixtures_app_data.json');
+  if (!r.ok) throw new Error(`JSON: HTTP ${r.status}`);
+  const json = await r.json();
+  const fixtures = json.fixtures.map((f, idx) => ({
+    id: idx,  // Changed from idx + 1 to idx to match 0-based indexing
+    name: f.name,
+    mfr: f.mfr,
+    cat: f.cat,
+    v: f.v.map((v, vIdx) => ({
+      id: vIdx,  // Changed from vIdx + 1 to vIdx
+      ...v
+    }))
+  }));
+  DATA = fixtures;
+  DATA_BY_ID = Object.fromEntries(fixtures.map(f => [f.id, f]));
+
+  // Extract unique categories
+  const categories = [...new Set(fixtures.map(f => f.cat))].sort();
+  categories.forEach(c => {
+    categoryFilter.insertAdjacentHTML('beforeend', `<option value="${esc(c)}">${esc(c)}</option>`);
+  });
+
+  renderCards(DATA);
+}
+
+// Initialize
+(async function init() {
+  try {
+    await loadCategories();
+    await loadFixtures();
+    resultCount.textContent = DATA.length;
+  } catch (e) {
+    console.warn('API unavailable, loading from JSON file...', e);
+    try {
+      await loadFromJSON();
+      resultCount.textContent = DATA.length;
+    } catch (jsonError) {
+      resultCount.parentElement.textContent = 'Could not load fixture data — is the Flask app running?';
+      console.error('Both API and JSON loading failed:', jsonError);
+    }
+  }
+})();
+
+// Render cards
+function renderCards(fixtures) {
+  grid.innerHTML = fixtures.map(f => `
+    <div class="card" data-fixture-id="${f.id}">
+      <div class="card-header">
+        <div class="card-badge">${f.cat}</div>
+        <div class="card-image">💡</div>
+      </div>
+      <div class="card-body">
+        <h3 class="card-name">${esc(f.name)}</h3>
+        <div class="card-specs">
+          ${f.v[0] ? `
+            <div class="card-spec-item">
+              <span class="spec-label">Power:</span>
+              <span class="spec-value">${f.v[0].power || 'N/A'}W</span>
+            </div>
+            <div class="card-spec-item">
+              <span class="spec-label">Efficacy:</span>
+              <span class="spec-value">${f.v[0].efficacy || 'N/A'} lm/W</span>
+            </div>
+            <div class="card-spec-item">
+              <span class="spec-label">CRI:</span>
+              <span class="spec-value">>${f.v[0].cri || 'N/A'}</span>
+            </div>
+          ` : ''}
+        </div>
+        <div class="card-actions">
+          <button class="btn-details" onclick="showDatasheetModal(${f.id}, 0)">Details</button>
+          <button class="btn-pdf" onclick="downloadPDF(${f.id}, ${f.v[0]?.id || 0})">PDF</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  resultCount.textContent = fixtures.length;
+}
+
+// Filter & search
+function applyFilters() {
+  let filtered = [...DATA];
+  const search = searchInput.value.toLowerCase();
+  const cat = categoryFilter.value;
+
+  if (search) {
+    filtered = filtered.filter(f => f.name.toLowerCase().includes(search) || f.cat.toLowerCase().includes(search));
+  }
+
+  if (cat) {
+    filtered = filtered.filter(f => f.cat === cat);
+  }
+
+  const sort = sortFilter.value;
+  if (sort === 'power') {
+    filtered.sort((a, b) => (b.v[0]?.power || 0) - (a.v[0]?.power || 0));
+  } else if (sort === 'efficacy') {
+    filtered.sort((a, b) => (b.v[0]?.efficacy || 0) - (a.v[0]?.efficacy || 0));
+  } else {
+    filtered.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  renderCards(filtered);
+}
+
+// Show datasheet modal directly
+window.showDatasheetModal = function(fixtureId, variantIdx) {
+  selectedFixture = DATA_BY_ID[fixtureId];
+  if (!selectedFixture) {
+    console.error('No fixture found for id:', fixtureId);
+    return;
+  }
+
+  selectedVariant = variantIdx !== undefined ? variantIdx : 0;
+  generateDatasheet();
+}
+
+// Preview panel
+window.openPreview = function(fixtureId) {
+  selectedFixture = DATA_BY_ID[fixtureId];
+  if (!selectedFixture) {
+    console.error('No fixture found for id:', fixtureId);
+    return;
+  }
+
+  previewTitle.textContent = selectedFixture.name;
+
+  // Populate specs
+  const specs = selectedFixture.v[0];
+  if (!specs) {
+    console.error('No variant found for fixture:', selectedFixture);
+    return;
+  }
+
+  document.getElementById('previewSpecs').innerHTML = `
+    <div class="preview-spec-item">
+      <div class="preview-spec-label">Power</div>
+      <div class="preview-spec-value">${specs.power || 'N/A'}W</div>
+    </div>
+    <div class="preview-spec-item">
+      <div class="preview-spec-label">Efficacy</div>
+      <div class="preview-spec-value">${specs.efficacy || 'N/A'} lm/W</div>
+    </div>
+    <div class="preview-spec-item">
+      <div class="preview-spec-label">CRI</div>
+      <div class="preview-spec-value">>${specs.cri || 'N/A'}</div>
+    </div>
+    <div class="preview-spec-item">
+      <div class="preview-spec-label">IP Rating</div>
+      <div class="preview-spec-value">${specs.mech?.[0] || 'N/A'}</div>
+    </div>
+  `;
+
+  // Populate variants
+  variantSelect.innerHTML = selectedFixture.v.map((v, idx) => `<option value="${idx}">${esc(v.name || selectedFixture.name)} ${v.power ? '- ' + v.power + 'W' : ''}</option>`).join('');
+  selectedVariant = 0;
+
+  previewPanel.classList.add('active');
+  previewOverlay.classList.add('active');
+}
+
+function closePreviewPanel() {
+  previewPanel.classList.remove('active');
+  previewOverlay.classList.remove('active');
+}
+
+// Generate unified datasheet (loads v2 template in iframe)
+function generateDatasheet() {
+  if (!selectedFixture) return;
+  if (selectedVariant === null || selectedVariant === undefined) selectedVariant = 0;
+
+  modalTitle.textContent = selectedFixture.name;
+
+  // Populate modal variant selector
+  const modalVariantSelect = document.getElementById('modalVariantSelect');
+  if (modalVariantSelect) {
+    modalVariantSelect.innerHTML = selectedFixture.v.map((v, idx) => 
+      `<option value="${idx}" ${idx == selectedVariant ? 'selected' : ''}>${esc(v.name || selectedFixture.name)} ${v.power ? '(' + v.power + 'W)' : ''}</option>`
+    ).join('');
+  }
+
+  const frame = document.getElementById('datasheetFrame');
+  if (frame) {
+    frame.src = `${API_BASE}/fixtures/${selectedFixture.id}/variants/${selectedVariant}/html`;
+  }
+
+  datasheetModal.classList.add('active');
+  closePreviewPanel();
+}
+
+// Download PDF
+window.downloadPDF = async function(fxId, vId) {
+  const fx = DATA_BY_ID[fxId];
+  const v = fx?.v?.find(x => x.id === vId) || fx?.v?.[vId] || fx?.v?.[0];
+
+  const triggerButtons = document.querySelectorAll(`button[onclick*="downloadPDF(${fxId}"]`);
+  triggerButtons.forEach(b => { b.disabled = true; b.dataset.origText = b.textContent; b.textContent = 'Generating…'; });
+  const modalPdfBtn = document.getElementById('modalPdfBtn');
+  if (modalPdfBtn) { modalPdfBtn.disabled = true; modalPdfBtn.textContent = 'Generating PDF…'; }
+
+  try {
+    const r = await fetch(`${API_BASE}/fixtures/${fxId}/variants/${vId}/pdf`);
+    if (!r.ok) {
+      let errText = `HTTP ${r.status}`;
+      try {
+        const errJson = await r.json();
+        if (errJson.error) errText = errJson.error;
+      } catch (_) {}
+      throw new Error(errText);
+    }
+
+    const cd = r.headers.get('Content-Disposition') || '';
+    let name = (cd.match(/filename\*?=['"]?(?:UTF-8'')?([^";\r\n]+)['"]?/i) || [])[1];
+    if (name) {
+      name = decodeURIComponent(name.replace(/^UTF-8''/i, '').replace(/^"|"$/g, ''));
+    }
+    if (!name || name === 'datasheet.pdf') {
+      if (fx) {
+        const power = v?.power ? `_${v.power}W` : '';
+        const cleanName = (fx.name || 'datasheet').replace(/[^a-zA-Z0-9_\-\s]/g, '').trim().replace(/\s+/g, '_');
+        name = `${cleanName}${power}_Datasheet.pdf`;
+      } else {
+        name = 'datasheet.pdf';
+      }
+    }
+
+    const blob = await r.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch (e) {
+    console.error('PDF export failed:', e);
+    alert('PDF export failed: ' + e.message);
+  } finally {
+    triggerButtons.forEach(b => { b.disabled = false; if (b.dataset.origText) b.textContent = b.dataset.origText; });
+    if (modalPdfBtn) { modalPdfBtn.disabled = false; modalPdfBtn.textContent = '⬇ Download PDF'; }
+  }
+}
+
+// Helper functions
+function esc(s) { return String(s).replace(/[&<>]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[c])); }
+function prettyKey(k) { return k.replace(/\b\w/g, c => c.toUpperCase()); }
+
+function specTable(rows) {
+  const filled = rows.filter(([, v]) => v !== undefined && v !== null && v !== '');
+  if (!filled.length) return '';
+  return `<table class="spec"><tbody>${filled.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</tbody></table>`;
+}
+
+function dataTable(t) {
+  const cols = t.columns || [];
+  const rows = t.rows || [];
+  if (!rows.length) return '';
+  return `<div class="sec" style="padding: 0;"><h4 style="padding: 20px 28px 10px; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: #555; margin: 0 0 8px; font-weight: 600;">${esc(t.caption || '')}</h4>
+    <table class="dtable"><thead><tr>${cols.map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead>
+    <tbody>${rows.map(r => `<tr>${cols.map(c => `<td>${esc(r[c] ?? '')}</td>`).join('')}</tr>`).join('')}</tbody></table>
+  </div>`;
+}
+
+// Event listeners
+searchInput.addEventListener('input', applyFilters);
+categoryFilter.addEventListener('change', applyFilters);
+sortFilter.addEventListener('change', applyFilters);
+clearBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  categoryFilter.value = '';
+  sortFilter.value = 'name';
+  applyFilters();
+});
+
+themeToggle.addEventListener('click', () => {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme') || 'light';
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  themeToggle.textContent = next === 'dark' ? '☀️ Light' : '🌙 Dark';
+
+  const logoImg = document.getElementById('logoImg');
+  if (next === 'dark') {
+    logoImg.src = '/assets/images/logo-bg-dark.svg';
+  } else {
+    logoImg.src = '/assets/images/logo.svg';
+  }
+});
+
+closePreview.addEventListener('click', closePreviewPanel);
+previewCancel.addEventListener('click', closePreviewPanel);
+previewOverlay.addEventListener('click', closePreviewPanel);
+closeModal.addEventListener('click', () => {
+  datasheetModal.classList.remove('active');
+});
+datasheetModal.addEventListener('click', (e) => {
+  if (e.target === datasheetModal) {
+    datasheetModal.classList.remove('active');
+  }
+});
+variantSelect.addEventListener('change', () => {
+  selectedVariant = variantSelect.value;
+});
+generateBtn.addEventListener('click', generateDatasheet);
+
+// Modal toolbar actions
+const modalVariantSelect = document.getElementById('modalVariantSelect');
+if (modalVariantSelect) {
+  modalVariantSelect.addEventListener('change', () => {
+    selectedVariant = parseInt(modalVariantSelect.value, 10);
+    const frame = document.getElementById('datasheetFrame');
+    if (frame && selectedFixture) {
+      frame.src = `${API_BASE}/fixtures/${selectedFixture.id}/variants/${selectedVariant}/html`;
+    }
+  });
+}
+
+const modalPrintBtn = document.getElementById('modalPrintBtn');
+if (modalPrintBtn) {
+  modalPrintBtn.addEventListener('click', () => {
+    const frame = document.getElementById('datasheetFrame');
+    if (frame && frame.contentWindow) {
+      frame.contentWindow.focus();
+      frame.contentWindow.print();
+    }
+  });
+}
+
+const modalPdfBtn = document.getElementById('modalPdfBtn');
+if (modalPdfBtn) {
+  modalPdfBtn.addEventListener('click', () => {
+    if (selectedFixture && selectedVariant !== null && selectedVariant !== undefined) {
+      downloadPDF(selectedFixture.id, selectedVariant);
+    }
+  });
+}
+
+// Load saved theme
+const saved = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', saved);
+themeToggle.textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
+if (saved === 'dark') {
+  document.getElementById('logoImg').src = '/assets/images/logo-bg-dark.svg';
+}
+</script>
+
+</body>
+</html>

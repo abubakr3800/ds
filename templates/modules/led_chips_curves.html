@@ -1,0 +1,356 @@
+<!-- ══════════════════════════════════════════
+     PAGE 5 — §2.2 BODY SPECS + §3 LED CHIPS + §3.1 CHIP PERFORMANCE
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="sec-h2">2.2 Body and Heat-Sink Description:</div>
+    <p class="tbl-caption">Table2: Body and Heat-Sink Description</p>
+    <table>
+      <thead><tr><th style="text-align:left;width:28%;">Item</th><th colspan="2">Description</th></tr></thead>
+      <tbody>
+        {{#each bodySpecs}}
+        <tr>
+          <td class="lbl">{{ k }}</td>
+          {{#if v2}}
+            <td class="val">{{ v }}</td>
+            <td class="val">{{ v2 }}</td>
+          {{else}}
+            <td colspan="2">{{ v }}</td>
+          {{/if}}
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    <div class="sec-h1">3. LED Chips</div>
+
+    <div class="clearfix">
+      <!-- Layout matching Screenshot 3: Right Figure 2 Philips Lumiled 3030 chip -->
+      {{#if product.chipImageUrl}}
+      <div class="float-right" style="margin-left:6mm;text-align:center;">
+        <img src="{{ product.chipImageUrl }}" alt="Philips Lumiled 3030" style="max-width:26mm;max-height:26mm;object-fit:contain;display:block;margin:0 auto;"/>
+        <div class="fig-caption" style="font-size:10px;font-weight:700;margin-top:2px;">Figure2: Philips Lumiled 3030</div>
+      </div>
+      {{/if}}
+
+      <div class="sec-h2">3.1 Chip Performance Characteristics</div>
+      <p class="tbl-caption">Table3: Chip Performance Characteristics</p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left;">Product</th>
+            <th>Nominal CCT</th>
+            <th>Minimum CRI</th>
+            <th>Typical Luminous Efficacy (lm/W)</th>
+            <th colspan="2">Luminous Flux (lm)</th>
+            <th>Part Number</th>
+          </tr>
+          <tr><th></th><th></th><th></th><th></th><th>Minimum</th><th>Typical</th><th></th></tr>
+        </thead>
+        <!-- FIXED: Philips LUXEON 3030 2D data — same for all SC products -->
+        <tbody>
+          <tr>
+            <td class="lbl" style="font-size:11px;">LUXEON<br>3030 2D<br>(Square LES)</td>
+            <td class="val">6500K</td>
+            <td class="val">90</td>
+            <td class="val">144</td>
+            <td class="val">94</td>
+            <td class="val">104</td>
+            <td class="val" style="font-size:10px;">L130-<br>6590003000X21</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 6 — §3.2 ELECTRICAL/THERMAL + §3.3 MAX RATINGS + §3.4.1 LIGHT OUTPUT CURVE
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="sec-h2">3.2 Electrical and Thermal Characteristics</div>
+    <p class="tbl-caption">Table4: Chip Electrical and Thermal Characteristics</p>
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:left;" rowspan="2">Part Number</th>
+          <th colspan="3">Forward Voltage (Vf)</th>
+          <th rowspan="2">Typical Temperature Coefficient of Forward Voltage [2] (mV/°C)</th>
+        </tr>
+        <tr><th>Minimum</th><th>Typical</th><th>Maximum</th></tr>
+      </thead>
+      <tbody>
+        <!-- FIXED: Philips 3030 electrical data -->
+        <tr>
+          <td class="lbl" style="font-size:10.5px;">L130-6590003000X21</td>
+          <td class="val">5.8</td>
+          <td class="val">6</td>
+          <td class="val">6.6</td>
+          <td class="val">-2 to -4</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sec-h2">3.3 Absolute Maximum Ratings</div>
+    <p class="tbl-caption">Table5: Chip Absolute Maximum Ratings</p>
+    <table>
+      <thead><tr><th style="text-align:left;">Parameter</th><th>Maximum Performance</th></tr></thead>
+      <tbody>
+        <!-- FIXED: Philips 3030 absolute max ratings -->
+        <tr><td class="lbl">DC Forward Current</td><td class="val">240mA</td></tr>
+        <tr><td class="lbl">Peak Pulsed Forward Current</td><td class="val">300mA</td></tr>
+        <tr><td class="lbl">LED Junction Temperature (DC &amp; Pulse)</td><td class="val">125°C</td></tr>
+        <tr><td class="lbl">Operating Case Temperature</td><td class="val">-40°C to 105°C</td></tr>
+        <tr><td class="lbl">LED Storage Temperature</td><td class="val">-40°C to 105°C</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sec-h2">3.4 Characteristics Curves</div>
+    <div class="sec-h3">3.4.1 Light Output Characteristics</div>
+
+    <!--
+      Figure3.a — Light Output vs Junction Temperature
+      Data source: chip.lightOutputCurve  [{x: tempC, y: normalizedOutput}]
+      Chart axes:  X = 0…120°C   Y = 0.7…1.1
+      SVG coords:  svgX = 60 + (x / 120) * 420
+                   svgY = 280 - ((y - 0.7) / 0.4) * 260
+    -->
+    <div class="chart-wrap">
+      <svg id="chart-fig3a" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"
+           style="max-width:115mm;border:1px solid #ddd;border-radius:6px;padding:4px;background:#fff;">
+        <!-- axes -->
+        <line x1="60" y1="20" x2="60" y2="280" stroke="#333" stroke-width="1.5"/>
+        <line x1="60" y1="280" x2="480" y2="280" stroke="#333" stroke-width="1.5"/>
+        <!-- axis labels -->
+        <text transform="rotate(-90,14,150)" x="14" y="150" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#555">Normalized Light Output [-]</text>
+        <text x="270" y="308" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#555">Junction Temperature [°C]</text>
+        <!-- Y ticks 0.7 to 1.1 (step 0.1) — svgY = 280 - ((val-0.7)/0.4)*260 -->
+        <g font-family="sans-serif" font-size="11" fill="#555" text-anchor="end">
+          <text x="54" y="284">0.7</text>
+          <text x="54" y="219">0.8</text>
+          <text x="54" y="154">0.9</text>
+          <text x="54" y="89">1.0</text>
+          <text x="54" y="24">1.1</text>
+        </g>
+        <!-- Y grid lines at y=0.8,0.9,1.0,1.1 -->
+        <g stroke="#eee" stroke-width="1">
+          <line x1="60" y1="219" x2="480" y2="219"/>
+          <line x1="60" y1="154" x2="480" y2="154"/>
+          <line x1="60" y1="89"  x2="480" y2="89"/>
+          <line x1="60" y1="24"  x2="480" y2="24"/>
+        </g>
+        <!-- X ticks 0,20,40,60,80,100,120 — svgX = 60 + (x/120)*420 -->
+        <g font-family="sans-serif" font-size="11" fill="#555" text-anchor="middle">
+          <text x="60"  y="295">0</text>
+          <text x="130" y="295">20</text>
+          <text x="200" y="295">40</text>
+          <text x="270" y="295">60</text>
+          <text x="340" y="295">80</text>
+          <text x="410" y="295">100</text>
+          <text x="480" y="295">120</text>
+        </g>
+        <!-- X grid lines -->
+        <g stroke="#eee" stroke-width="1">
+          <line x1="130" y1="20" x2="130" y2="280"/>
+          <line x1="200" y1="20" x2="200" y2="280"/>
+          <line x1="270" y1="20" x2="270" y2="280"/>
+          <line x1="340" y1="20" x2="340" y2="280"/>
+          <line x1="410" y1="20" x2="410" y2="280"/>
+        </g>
+        <!-- tick marks on axes -->
+        <g stroke="#555" stroke-width="1">
+          <line x1="55" y1="219" x2="65" y2="219"/>
+          <line x1="55" y1="154" x2="65" y2="154"/>
+          <line x1="55" y1="89"  x2="65" y2="89"/>
+          <line x1="55" y1="24"  x2="65" y2="24"/>
+          <line x1="130" y1="275" x2="130" y2="285"/>
+          <line x1="200" y1="275" x2="200" y2="285"/>
+          <line x1="270" y1="275" x2="270" y2="285"/>
+          <line x1="340" y1="275" x2="340" y2="285"/>
+          <line x1="410" y1="275" x2="410" y2="285"/>
+          <line x1="480" y1="275" x2="480" y2="285"/>
+        </g>
+        <!--
+          DATA POLYLINE — rendered by Handlebars helper or server-side JS.
+          For each point in chip.lightOutputCurve compute:
+            px = 60 + (point.x / 120) * 420
+            py = 280 - ((point.y - 0.7) / 0.4) * 260
+          Fallback static points match PDF curve shape exactly.
+        -->
+        <polyline
+          id="fig3a-data"
+          data-curve="lightOutputCurve"
+          data-xmin="0" data-xmax="120" data-xpx0="60" data-xpxrange="420"
+          data-ymin="0.7" data-ymax="1.1" data-ypx0="280" data-ypxrange="260"
+          points="60,21 130,43 200,77 270,120 340,170 410,219 480,258"
+          stroke="#2244cc" stroke-width="2.5" fill="none"/>
+      </svg>
+      <div class="fig-caption">Figure3.a: Chip Light Output Characteristics</div>
+    </div>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 7 — §3.4.2 FORWARD CURRENT CURVES
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <!--
+      Figure3.b — Relative Light Output vs Forward Current
+      Data source: chip.relOutputCurve  [{x: currentMA, y: relOutput}]
+      Chart axes:  X = 0…250 mA    Y = 0.0…2.0
+      SVG coords:  svgX = 60 + (x / 250) * 420
+                   svgY = 300 - (y / 2.0) * 280
+    -->
+    <div class="chart-wrap">
+      <svg id="chart-fig3b" viewBox="0 0 500 340" xmlns="http://www.w3.org/2000/svg"
+           style="max-width:115mm;border:1px solid #ddd;border-radius:6px;padding:4px;background:#fff;">
+        <line x1="60" y1="20" x2="60" y2="300" stroke="#333" stroke-width="1.5"/>
+        <line x1="60" y1="300" x2="480" y2="300" stroke="#333" stroke-width="1.5"/>
+        <text transform="rotate(-90,14,160)" x="14" y="160" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#555">Relative Light Output [-]</text>
+        <text x="270" y="326" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#555">Forward Current [mA]</text>
+        <!-- Y ticks 0.0 to 2.0 (step 0.5) — svgY = 300 - (y/2.0)*280 -->
+        <g font-family="sans-serif" font-size="11" fill="#555" text-anchor="end">
+          <text x="54" y="304">0.0</text>
+          <text x="54" y="234">0.5</text>
+          <text x="54" y="160">1.0</text>
+          <text x="54" y="90">1.5</text>
+          <text x="54" y="20">2.0</text>
+        </g>
+        <g stroke="#eee" stroke-width="1">
+          <line x1="60" y1="230" x2="480" y2="230"/>
+          <line x1="60" y1="160" x2="480" y2="160"/>
+          <line x1="60" y1="90"  x2="480" y2="90"/>
+          <line x1="60" y1="20"  x2="480" y2="20"/>
+        </g>
+        <!-- X ticks 0,50,100,150,200,250 — svgX = 60 + (x/250)*420 -->
+        <g font-family="sans-serif" font-size="11" fill="#555" text-anchor="middle">
+          <text x="60"  y="316">0</text>
+          <text x="144" y="316">50</text>
+          <text x="228" y="316">100</text>
+          <text x="312" y="316">150</text>
+          <text x="396" y="316">200</text>
+          <text x="480" y="316">250</text>
+        </g>
+        <g stroke="#eee" stroke-width="1">
+          <line x1="144" y1="20" x2="144" y2="300"/>
+          <line x1="228" y1="20" x2="228" y2="300"/>
+          <line x1="312" y1="20" x2="312" y2="300"/>
+          <line x1="396" y1="20" x2="396" y2="300"/>
+        </g>
+        <g stroke="#555" stroke-width="1">
+          <line x1="55" y1="230" x2="65" y2="230"/>
+          <line x1="55" y1="160" x2="65" y2="160"/>
+          <line x1="55" y1="90"  x2="65" y2="90"/>
+          <line x1="55" y1="20"  x2="65" y2="20"/>
+          <line x1="144" y1="295" x2="144" y2="305"/>
+          <line x1="228" y1="295" x2="228" y2="305"/>
+          <line x1="312" y1="295" x2="312" y2="305"/>
+          <line x1="396" y1="295" x2="396" y2="305"/>
+          <line x1="480" y1="295" x2="480" y2="305"/>
+        </g>
+        <!--
+          DATA POLYLINE — for each point in chip.relOutputCurve:
+            px = 60 + (point.x / 250) * 420
+            py = 300 - (point.y / 2.0) * 280
+        -->
+        <polyline
+          id="fig3b-data"
+          data-curve="relOutputCurve"
+          data-xmin="0" data-xmax="250" data-xpx0="60" data-xpxrange="420"
+          data-ymin="0" data-ymax="2.0" data-ypx0="300" data-ypxrange="280"
+          points="60,300 144,230 228,160 312,90 396,20 480,6"
+          stroke="#2244cc" stroke-width="2.5" fill="none"/>
+      </svg>
+      <div class="fig-caption">Figure3.b: Chip Light Output Characteristics</div>
+    </div>
+
+    <div class="sec-h3">3.4.2 Forward Current Characteristics</div>
+    <!--
+      Figure4 — Forward Current vs Forward Voltage (I-V curve)
+      Data source: chip.ivCurve  [{x: voltageV, y: currentMA}]
+      Chart axes:  X = 5.4…6.6 V    Y = 0…250 mA
+      SVG coords:  svgX = 60 + ((x - 5.4) / 1.2) * 420
+                   svgY = 300 - (y / 250) * 280
+    -->
+    <div class="chart-wrap">
+      <svg id="chart-fig4" viewBox="0 0 500 340" xmlns="http://www.w3.org/2000/svg"
+           style="max-width:115mm;border:1px solid #ddd;border-radius:6px;padding:4px;background:#fff;">
+        <line x1="60" y1="20" x2="60" y2="300" stroke="#333" stroke-width="1.5"/>
+        <line x1="60" y1="300" x2="480" y2="300" stroke="#333" stroke-width="1.5"/>
+        <text transform="rotate(-90,14,160)" x="14" y="160" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#555">Forward Current [mA]</text>
+        <text x="270" y="326" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#555">Forward Voltage [V]</text>
+        <!-- Y ticks 0,50,100,150,200,250 — svgY = 300 - (y/250)*280 -->
+        <g font-family="sans-serif" font-size="11" fill="#555" text-anchor="end">
+          <text x="54" y="304">0</text>
+          <text x="54" y="244">50</text>
+          <text x="54" y="188">100</text>
+          <text x="54" y="132">150</text>
+          <text x="54" y="76">200</text>
+          <text x="54" y="20">250</text>
+        </g>
+        <g stroke="#eee" stroke-width="1">
+          <line x1="60" y1="244" x2="480" y2="244"/>
+          <line x1="60" y1="188" x2="480" y2="188"/>
+          <line x1="60" y1="132" x2="480" y2="132"/>
+          <line x1="60" y1="76"  x2="480" y2="76"/>
+          <line x1="60" y1="20"  x2="480" y2="20"/>
+        </g>
+        <!-- X ticks 5.4,5.6,5.8,6.0,6.2,6.4,6.6 — svgX = 60 + ((x-5.4)/1.2)*420 -->
+        <g font-family="sans-serif" font-size="11" fill="#555" text-anchor="middle">
+          <text x="60"  y="316">5.4</text>
+          <text x="130" y="316">5.6</text>
+          <text x="200" y="316">5.8</text>
+          <text x="270" y="316">6.0</text>
+          <text x="340" y="316">6.2</text>
+          <text x="410" y="316">6.4</text>
+          <text x="480" y="316">6.6</text>
+        </g>
+        <g stroke="#eee" stroke-width="1">
+          <line x1="130" y1="20" x2="130" y2="300"/>
+          <line x1="200" y1="20" x2="200" y2="300"/>
+          <line x1="270" y1="20" x2="270" y2="300"/>
+          <line x1="340" y1="20" x2="340" y2="300"/>
+          <line x1="410" y1="20" x2="410" y2="300"/>
+        </g>
+        <g stroke="#555" stroke-width="1">
+          <line x1="55" y1="244" x2="65" y2="244"/>
+          <line x1="55" y1="188" x2="65" y2="188"/>
+          <line x1="55" y1="132" x2="65" y2="132"/>
+          <line x1="55" y1="76"  x2="65" y2="76"/>
+          <line x1="55" y1="20"  x2="65" y2="20"/>
+          <line x1="130" y1="295" x2="130" y2="305"/>
+          <line x1="200" y1="295" x2="200" y2="305"/>
+          <line x1="270" y1="295" x2="270" y2="305"/>
+          <line x1="340" y1="295" x2="340" y2="305"/>
+          <line x1="410" y1="295" x2="410" y2="305"/>
+          <line x1="480" y1="295" x2="480" y2="305"/>
+        </g>
+        <!--
+          DATA POLYLINE — for each point in chip.ivCurve:
+            px = 60 + ((point.x - 5.4) / 1.2) * 420
+            py = 300 - (point.y / 250) * 280
+        -->
+        <polyline
+          id="fig4-data"
+          data-curve="ivCurve"
+          data-xmin="5.4" data-xmax="6.6" data-xpx0="60" data-xpxrange="420"
+          data-ymin="0" data-ymax="250" data-ypx0="300" data-ypxrange="280"
+          points="60,299 90,297 130,292 165,280 200,262 235,238 270,204 305,162 340,115 375,66 410,22 450,8 480,4"
+          stroke="#2244cc" stroke-width="2.5" fill="none"/>
+      </svg>
+      <div class="fig-caption">Figure4: Chip Forward Current Characteristics</div>
+    </div>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+

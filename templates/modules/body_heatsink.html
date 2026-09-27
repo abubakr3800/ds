@@ -1,0 +1,50 @@
+<!-- ══════════════════════════════════════════
+     PAGE 4 — §1.2 ENV + §1.3 COMPAT + §1.4 PARTS + §2.1 HEAT-SINK THEORY
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="sec-h2">1.2 Environmental Compliance:</div>
+    <!-- FIXED — only {{ product.typeName }} changes per product -->
+    <p class="body-p">Short Circuit is committed to providing environmentally friendly products to the solid-state lighting market. {{ product.typeName }} LED is compliant to the general environmental duty (GED). Short Circuit will not intentionally add the following restricted materials to its products: lead, mercury, cadmium, hexavalent chromium, polybrominated biphenyls (PBB) or polybrominated diphenyl ethers (PBDE).</p>
+
+    <div class="sec-h2">1.3 Compatibilities</div>
+    <!-- FIXED: same 6 certifications for all SC Philips-3030 products -->
+    <div class="cert-row" id="cert-row">
+      <div class="cert-item"><img src="compatibilities/RoHS.png" alt="RoHS" onerror="this.classList.add('img-error');this.nextElementSibling.style.display='block';"/><span class="cert-fallback">RoHS</span></div>
+      <div class="cert-item"><img src="compatibilities/ISO.png"  alt="ISO"  onerror="this.classList.add('img-error');this.nextElementSibling.style.display='block';"/><span class="cert-fallback">ISO</span></div>
+      <div class="cert-item"><img src="compatibilities/CE.png"   alt="CE"   onerror="this.classList.add('img-error');this.nextElementSibling.style.display='block';"/><span class="cert-fallback">CE</span></div>
+      <div class="cert-item"><img src="compatibilities/UL.png"   alt="UL"   onerror="this.classList.add('img-error');this.nextElementSibling.style.display='block';"/><span class="cert-fallback">UL</span></div>
+      <div class="cert-item"><img src="compatibilities/LM79.png" alt="LM79" onerror="this.classList.add('img-error');this.nextElementSibling.style.display='block';"/><span class="cert-fallback">LM79</span></div>
+      <div class="cert-item"><img src="compatibilities/LM80.png" alt="LM80" onerror="this.classList.add('img-error');this.nextElementSibling.style.display='block';"/><span class="cert-fallback">LM80</span></div>
+    </div>
+
+    <div class="sec-h2">1.4 Product Main Parts:</div>
+    <!-- FIXED — only {{ product.typeName }} changes per product -->
+    <p class="body-p">{{ product.typeName }} LED is mainly consisted of three parts described as following:</p>
+    <p class="body-p">Body and heat sink which is made of Aluminum alloy to dissipate the internal temperature of Chips and Drivers.</p>
+    <p class="body-p">Philips 3030 LED Chips with efficiency of 145Lm/W.</p>
+    <p class="body-p">Short Circuit Driver which is responsible for supplying the chip with required voltage and current. Also, the driver is protected against over voltage and over current occurrence.</p>
+
+    <div class="sec-h1">2. Body and Heat-Sink</div>
+    <div class="sec-h2">2.1 Heat-Sink Operation Theory</div>
+
+    <!-- Layout matching Screenshot 4: Left theory text, Right Figure 1 heatsink views -->
+    <div style="display:flex;gap:6mm;align-items:flex-start;margin-top:4mm;">
+      <div style="flex:1;">
+        <p class="body-p" style="line-height:1.6;margin-bottom:4mm;">Due to electronic circuits nature, there is over internal heat generated during the operation period. That heat needs to be dissipated to protect driver components from being damaged.</p>
+        <p class="body-p" style="line-height:1.6;">According to Heat Transfer Theory, materials with high thermal conductivity are used to transfer heat from the hot region to the cold one, space in our case, so a heat-sink made from Aluminum alloy is a suitable choice for this mission.</p>
+      </div>
+      <div style="flex:0 0 78mm;text-align:center;">
+        <div style="min-height:55mm;display:flex;align-items:center;justify-content:center;">
+          {{#if product.heatSinkImageUrl}}
+            <img src="{{ product.heatSinkImageUrl }}" alt="Body and Heat-Sink" style="max-width:100%;max-height:58mm;object-fit:contain;display:block;margin:0 auto;"/>
+          {{/if}}
+        </div>
+        <div class="fig-caption" style="font-weight:700;font-size:11px;margin-top:2mm;">Figure1: Body and Heat-Sink</div>
+      </div>
+    </div>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>

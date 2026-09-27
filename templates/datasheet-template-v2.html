@@ -1,0 +1,1346 @@
+<!doctype html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════════════╗
+  ║  SC DATASHEET TEMPLATE  v2  —  Handlebars  —  A4  —  Philips-3030 line ║
+  ╠══════════════════════════════════════════════════════════════════════════╣
+  ║                                                                          ║
+  ║  FIXED (hardcoded in HTML — same for ALL SC Philips-3030 products):      ║
+  ║   • Certifications row  (RoHS, ISO, CE, UL, LM79, LM80)                 ║
+  ║   • Environmental compliance paragraph (only product-type noun changes)  ║
+  ║   • Heat-sink theory paragraphs                                          ║
+  ║   • All LED chip specs: performance, electrical/thermal, max ratings,    ║
+  ║     all three characteristic curves (Figures 3a, 3b, 4, 5)              ║
+  ║   • Full driver section: SC-LDF-35V1450mA description, features,        ║
+  ║     protections, AC/DC/protection spec tables, mechanical drawing        ║
+  ║   • TOC, page structure, section headings                                ║
+  ║                                                                          ║
+  ║  VARIABLE (from DB — rows in `datasheets` table):                        ║
+  ║                                                                          ║
+  ║  product: {                                                              ║
+  ║    name         : string   e.g. "SHORT CIRCUIT STREET LIGHT"             ║
+  ║    typeName     : string   e.g. "Street Light"  ← used in body text      ║
+  ║    modelNumber  : string   e.g. "SC-150W-SL"                             ║
+  ║    subtitle     : string   e.g. "High lux, High performance…"            ║
+  ║    heroImageUrl : string?  path to product photo                         ║
+  ║    heatSinkImageUrl: string?  path to body/heat-sink photo               ║
+  ║  }                                                                       ║
+  ║                                                                          ║
+  ║  generalSpecs   : [{k, v, unit?}]   ← rows from datasheets table         ║
+  ║    section = 'general_spec'                                              ║
+  ║    Typical rows (vary per product):                                      ║
+  ║      LED Chip · Driver · LED efficiency · Wattage · Total Luminous       ║
+  ║      N.O.Chips · N.O.Drivers · Beam angle · Color temperature · CRI      ║
+  ║      Power factor · Input voltage · Frequency · Operating Temperature    ║
+  ║      Humidity · IP · Driver Protection · Life time · Warranty            ║
+  ║                                                                          ║
+  ║  bodySpecs      : [{k, v, v2?}]     ← rows from datasheets table         ║
+  ║    section = 'body_spec'                                                 ║
+  ║    Typical rows (vary per product):                                      ║
+  ║      Body · Aluminum Purity · Number Of Fins* · Thickness Of Fin (inner/outer)  ║
+  ║      Front Glass Thickness* · Front Glass Max.temperature* · Lenses*    ║
+  ║      Beam Angle · Gasket · Glands · IP · Weight · Wattage               ║
+  ║      Installation Arm Diameter* · Installation Angle*                   ║
+  ║    (* optional — only present for some product types)                   ║
+  ║    rows with two value cols use v2 (e.g. Thickness Of Fin: v=5mm v2=1.5mm)║
+  ║                                                                          ║
+  ║  footer: { address, phone, email, website }  ← system-level constant    ║
+  ╚══════════════════════════════════════════════════════════════════════════╝
+-->
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=794"/>
+  <title>{{ product.name }} — Datasheet</title>
+  <style>
+    @font-face {
+      font-family: 'Anton';
+      src: url('__FONTS_BASE__/assets/fonts/Anton/Anton-Regular.ttf') format('truetype');
+      font-weight: 400; font-style: normal;
+    }
+    @font-face {
+      font-family: 'IBM Plex Sans Arabic';
+      src: url('__FONTS_BASE__/assets/fonts/IBM_Plex_Sans_Arabic/IBMPlexSansArabic-Regular.ttf') format('truetype');
+      font-weight: 400; font-style: normal;
+    }
+    @font-face {
+      font-family: 'IBM Plex Sans Arabic';
+      src: url('__FONTS_BASE__/assets/fonts/IBM_Plex_Sans_Arabic/IBMPlexSansArabic-Medium.ttf') format('truetype');
+      font-weight: 500; font-style: normal;
+    }
+    @font-face {
+      font-family: 'IBM Plex Sans Arabic';
+      src: url('__FONTS_BASE__/assets/fonts/IBM_Plex_Sans_Arabic/IBMPlexSansArabic-SemiBold.ttf') format('truetype');
+      font-weight: 600; font-style: normal;
+    }
+    @font-face {
+      font-family: 'IBM Plex Sans Arabic';
+      src: url('__FONTS_BASE__/assets/fonts/IBM_Plex_Sans_Arabic/IBMPlexSansArabic-Bold.ttf') format('truetype');
+      font-weight: 700; font-style: normal;
+    }
+  </style>
+  <style>
+    /* ─────────────────────────────────────────
+       DESIGN TOKENS
+    ───────────────────────────────────────── */
+    :root {
+      --font-label: 'Anton', sans-serif;
+      --font-body:  'IBM Plex Sans Arabic', sans-serif;
+      --brand:      rgb(255, 0, 0);
+      --brand-dark: rgb(200, 0, 0);
+      --brand-blue: rgb(5, 99, 193);
+      --orange:     #e07b00;
+      --text:       rgb(38, 38, 38);
+      --text-black: rgb(0, 0, 0);
+      --muted:      #6b7280;
+      --line:       #e5e7eb;
+      --soft:       #f8fafc;
+      --paper:      #ffffff;
+      --page-w:     210mm;
+      --page-h:     296mm;
+      --ph:         20mm;
+      --pf:         18mm;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.5;
+      background: #f0f0f0;
+    }
+    @media screen {
+      body { padding: 8mm 0; }
+      .page { margin: 0 auto 8mm !important; }
+    }
+
+    /* ─────────────────────────────────────────
+       PRINT
+    ───────────────────────────────────────── */
+    @page { size: A4; margin: 0; }
+
+    @media print {
+      body { background: #fff; }
+      .page { margin: 0; border: 0; box-shadow: none; padding: 10mm 13mm; }
+      /* scr-header and scr-footer stay visible on print — they ARE the header/footer */
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      table  { page-break-inside: auto; }
+      thead  { display: table-header-group; }
+      tbody tr { page-break-inside: avoid; }
+      .avoid-break { page-break-inside: avoid; }
+    }
+
+    /* ─────────────────────────────────────────
+       PAGE WRAPPER
+    ───────────────────────────────────────── */
+    .page {
+      width: var(--page-w);
+      min-height: var(--page-h); /* full A4 height — flex pushes footer to bottom */
+      margin: 0 auto 8mm;
+      padding: 9mm 13mm;
+      background: var(--paper);
+      border: 1px solid #ddd;
+      box-shadow: 0 8px 24px rgba(0,0,0,.10);
+      display: flex;
+      flex-direction: column;
+      /* watermark needs a positioning context */
+      position: relative;
+      overflow: hidden;
+    }
+    /* ─── WATERMARK ─── */
+    .page::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 140mm;
+      height: 140mm;
+      background-image: url('__LOGO_URL__');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: contain;
+      opacity: 0.055;        /* subtle — adjust 0.03…0.10 to taste */
+      pointer-events: none;
+      z-index: 0;
+      /* keep watermark inside the page painting layer */
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    /* ensure all page content renders above the watermark */
+    .page > * { position: relative; z-index: 1; }
+    .page-main  { flex: 1 1 auto; }
+    .page-break { page-break-before: always; break-before: page; }
+    .avoid-break{ page-break-inside: avoid; }
+
+    /* ─────────────────────────────────────────
+       PRINT FIXED HEADER / FOOTER
+    ───────────────────────────────────────── */
+    /* print-header/footer disabled — using scr-header/scr-footer instead */
+    .print-header, .print-footer { display: none !important; }
+    @media print {
+      /* print fixed header/footer not used on blob URLs */
+      .print-header {
+        position: fixed; top: calc(var(--ph) * -1);
+        left: 0; right: 0; width: var(--page-w); height: var(--ph);
+        margin: 0 auto; padding: 0 13mm; background: var(--paper);
+        border-bottom: 2px solid var(--line); z-index: 999; align-items: center;
+      }
+      .print-footer {
+        position: fixed; bottom: calc(var(--pf) * -1);
+        left: 0; right: 0; width: var(--page-w); height: var(--pf);
+        margin: 0 auto; padding: 0 13mm; background: var(--paper);
+        border-top: 1px solid var(--line); z-index: 999; align-items: center;
+      }
+    }
+    .ph-inner { display: flex; align-items: center; gap: 8mm; width: 100%; }
+    .ph-inner img { width: 32mm; height: auto; flex-shrink: 0; }
+    .ph-inner h1 {
+      margin: 0; font-family: var(--font-label); font-size: 13px;
+      color: var(--brand); font-weight: 400;
+    }
+    .pf-inner {
+      font-family: var(--font-body); width: 100%;
+      display: flex; justify-content: space-between; gap: 8mm;
+      font-size: 10px; font-weight: 600; color: var(--muted); line-height: 1.25;
+    }
+    .pfc { display: flex; flex-direction: column; gap: 2px; }
+    .pfc.l { text-align: left; }
+    .pfc.r { text-align: right; }
+    .pfc .frow { display: flex; align-items: center; gap: 5px; }
+    .pfc.r .frow { justify-content: flex-end; }
+    .pfc .frow svg { width: 11px; height: 11px; opacity: .8; }
+
+    /* ─────────────────────────────────────────
+       SCREEN SHARED HEADER / FOOTER  (offer-template style)
+    ───────────────────────────────────────── */
+    .scr-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 6mm; margin-bottom: 5mm;
+      border-bottom: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+    .scr-header img { width: 36mm; height: auto; display: block; }
+    .scr-header .doc-ref {
+      font-family: var(--font-label); font-size: 11px; color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+    .scr-footer {
+      flex-shrink: 0;
+      font-family: var(--font-body);
+      border-top: 1px solid var(--line); padding-top: 4mm; margin-top: 5mm;
+      display: flex; justify-content: space-between; gap: 8mm;
+      font-size: 11px; font-weight: 600; color: var(--muted); line-height: 1.35;
+    }
+    .scr-footer .fl { display: flex; flex-direction: column; gap: 2px; }
+    .scr-footer .fr { display: flex; flex-direction: column; gap: 2px; text-align: right; }
+    .frow { display: flex; align-items: center; gap: 5px; }
+    .fr .frow { justify-content: flex-end; }
+    .frow svg { width: 12px; height: 12px; opacity: .8; flex-shrink: 0; }
+
+    /* ─────────────────────────────────────────
+       TYPOGRAPHY
+    ───────────────────────────────────────── */
+    h1.page-title {
+      font-family: var(--font-label); font-size: 32px; color: var(--text-black);
+      font-weight: 400; letter-spacing: .01em; line-height: 1.05; margin-bottom: 3mm;
+    }
+    .page-subtitle {
+      font-family: var(--font-body); font-size: 13px; font-weight: 500;
+      color: var(--muted); margin-bottom: 5mm;
+    }
+    .orange-label {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      color: var(--orange); letter-spacing: .06em; text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .sec-h1 {
+      font-family: var(--font-body); font-size: 16px; font-weight: 700;
+      color: var(--text-black); margin: 6mm 0 3mm;
+      border-bottom: 2px solid var(--orange); padding-bottom: 2px;
+    }
+    .sec-h2 {
+      font-family: var(--font-body); font-size: 13px; font-weight: 700;
+      color: var(--text-black); margin: 5mm 0 2mm;
+    }
+    .sec-h3 {
+      font-family: var(--font-body); font-size: 12px; font-weight: 700;
+      color: var(--text-black); margin: 4mm 0 2mm;
+    }
+    .tbl-caption {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      text-align: center; color: var(--text-black); margin-bottom: 3px;
+    }
+    .fig-caption {
+      font-family: var(--font-body); font-size: 11px; font-weight: 700;
+      text-align: center; color: var(--text-black); margin-top: 4px;
+    }
+    .body-p {
+      font-family: var(--font-body); font-size: 12px; font-weight: 500;
+      color: var(--text); margin-bottom: 4mm; line-height: 1.6; text-align: justify;
+    }
+
+    /* ─────────────────────────────────────────
+       TABLES
+    ───────────────────────────────────────── */
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 11.5px; margin-bottom: 4mm;
+    }
+    table th, table td {
+      border: 1px solid #000; padding: 5px 8px;
+      font-family: var(--font-body); text-align: left; vertical-align: middle;
+    }
+    table thead th { font-weight: 700; background: #fff; color: var(--text-black); text-align: center; }
+    table tbody td { font-weight: 700; color: var(--text-black); }
+    table tbody td.lbl { font-weight: 700; color: var(--text-black); }
+    table tbody td.val { text-align: center; }
+    table tbody td.unit { text-align: center; }
+    table tbody tr:nth-child(even) td { background: #fafafa; }
+    .tbl-center { width: auto; margin: 0 auto; }
+    .tbl-center th, .tbl-center td { text-align: center; padding: 5px 16px; }
+    .tbl-center th:first-child, .tbl-center td:first-child { text-align: left; font-weight: 700; }
+
+    /* ─────────────────────────────────────────
+       CHECKLIST (features / protections)
+    ───────────────────────────────────────── */
+    .check-list { list-style: none; margin: 2mm 0 4mm; }
+    .check-list li {
+      font-family: var(--font-body); font-size: 12px; font-weight: 600;
+      color: var(--text); padding-left: 14px; position: relative; margin-bottom: 2px;
+    }
+    .check-list li::before { content: "✓"; position: absolute; left: 0; color: var(--text-black); }
+
+    /* ─────────────────────────────────────────
+       LAYOUT HELPERS
+    ───────────────────────────────────────── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
+    .float-right {
+      float: right; margin: 0 0 4mm 6mm;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .float-right svg, .float-right img { width: 44mm; height: auto; }
+    .clearfix::after { content: ''; display: table; clear: both; }
+    .chart-wrap {
+      display: flex; flex-direction: column; align-items: center; margin: 4mm 0;
+    }
+    .chart-wrap svg { max-width: 110mm; height: auto; }
+    .cert-row {
+      display: flex; align-items: center; gap: 8mm; flex-wrap: wrap;
+      margin: 4mm 0 5mm; padding: 4mm 0;
+    }
+    /* Each cert item is a logo image with a text fallback */
+    .cert-item {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+    }
+    .cert-item img {
+      height: 8mm; width: auto; object-fit: contain;
+    }
+    .cert-item img.img-error { display: none; }
+    .cert-item img.img-error + .cert-fallback { display: block; }
+    .cert-fallback {
+      display: none;
+      font-family: var(--font-body); font-size: 14px; font-weight: 900;
+      letter-spacing: .04em; color: #111;
+    }
+    .no-js .cert-fallback { display: block; }
+    .no-js .cert-item img  { display: none; }
+
+    /* TOC */
+    .toc-title {
+      font-family: var(--font-body); font-size: 18px; font-weight: 700;
+      color: var(--orange); margin-bottom: 6mm;
+      border-bottom: 2px solid var(--orange); padding-bottom: 2px; display: inline-block;
+    }
+    .toc-list { list-style: none; }
+    .toc-list li { margin-bottom: 1.5mm; }
+    .toc-row { display: flex; align-items: baseline; gap: 2mm; font-family: var(--font-body); font-size: 12.5px; }
+    .toc-row.h1 { font-weight: 700; font-size: 13px; margin-top: 3mm; }
+    .toc-row.h2 { padding-left: 4mm; font-weight: 600; }
+    .toc-row.h3 { padding-left: 8mm; font-weight: 500; }
+    .toc-row.h4 { padding-left: 12mm; font-weight: 400; }
+    .toc-row.h5 { padding-left: 16mm; font-weight: 400; }
+    .toc-dots { flex: 1; border-bottom: 1px dotted #aaa; margin-bottom: 2px; }
+    .dim-box { border: 1px solid #ccc; border-radius: 4px; background: #fafafa; padding: 6mm; margin: 4mm 0; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     PRINT FIXED HEADER (appears on all pages)
+══════════════════════════════════════════ -->
+<div class="print-header">
+  <div class="ph-inner">
+    <img src="logo.png" alt="SC"/>
+    <h1>{{ product.name }} — DATASHEET</h1>
+    <div style="flex:1"></div>
+    <span style="font-family:var(--font-label);font-size:12px;color:var(--muted);">{{ product.modelNumber }}</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PRINT FIXED FOOTER (appears on all pages)
+══════════════════════════════════════════ -->
+<div class="print-footer">
+  <div class="pf-inner">
+    <div class="pfc l">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span>{{ footer.address }}</span></div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span>{{ footer.phone }}</span></div>
+    </div>
+    <div class="pfc r">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg><span>{{ footer.email }}</span></div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg><span>{{ footer.website }}</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 1 — COVER / HERO
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-main">
+    <div class="scr-header">
+      <img src="logo.png" alt="Short Circuit"/>
+      <span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span>
+    </div>
+
+    <!-- Layout matching Screenshot 5: Left hero + titles, Center orange divider, Right abstract -->
+    <div style="display:flex;gap:8mm;align-items:stretch;min-height:165mm;margin-top:6mm;">
+
+      <!-- LEFT: product image + product name + subtitle -->
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding-right:6mm;">
+        <div style="width:100%;height:85mm;display:flex;align-items:center;justify-content:center;margin-bottom:8mm;">
+          {{#if product.heroImageUrl}}
+            <img src="{{ product.heroImageUrl }}" alt="{{ product.name }}" style="max-width:100%;max-height:85mm;object-fit:contain;display:block;"/>
+          {{else}}
+            <span style="font-family:var(--font-body);color:var(--muted);font-size:12px;font-weight:600;">No image provided</span>
+          {{/if}}
+        </div>
+        <div style="width:100%;text-align:left;">
+          <div style="font-family:var(--font-hero);font-size:26px;font-weight:800;letter-spacing:1px;color:#111;line-height:1.2;">SHORT CIRCUIT</div>
+          <div style="font-family:var(--font-hero);font-size:24px;font-weight:800;letter-spacing:1px;color:#111;line-height:1.2;margin-bottom:6mm;text-transform:uppercase;">{{ product.typeName }}</div>
+          <p style="font-family:var(--font-body);font-size:11px;color:#333;line-height:1.5;">{{ product.subtitle }}</p>
+        </div>
+      </div>
+
+      <!-- CENTER: Solid vertical orange dividing line -->
+      <div style="width:2px;background-color:#E85A1B;align-self:stretch;margin:0 2mm;"></div>
+
+      <!-- RIGHT: abstract -->
+      <div style="flex:1;padding-left:8mm;padding-top:20mm;">
+        <div style="color:#E85A1B;font-family:var(--font-hero);font-weight:700;font-size:13px;letter-spacing:1.5px;margin-bottom:5mm;text-transform:uppercase;">ABSTRACT</div>
+        <p class="body-p" style="margin-bottom:3.5mm;line-height:1.6;">Short circuit {{ product.typeName }} for industrial use.</p>
+        <p class="body-p" style="margin-bottom:3.5mm;line-height:1.6;">High performance of 98% of led efficiency within more than 50,000 operating hours.</p>
+        <p class="body-p" style="margin-bottom:3.5mm;line-height:1.6;">{{ product.typeName }} is protected against the electricity instability with over voltage, current, and temperature protection.</p>
+        <p class="body-p" style="margin-bottom:3.5mm;line-height:1.6;">Flood lighting consists of Philips chips and short-circuit drivers with warranty of 5 years.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Screen footer -->
+  <div class="scr-footer">
+    <div class="fl">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div>
+    </div>
+    <div class="fr">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 2 — TABLE OF CONTENTS
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="toc-title">Table of Contents</div>
+    <ul class="toc-list">
+      <li><div class="toc-row h1"><span><strong>1</strong>&nbsp;&nbsp;General product information</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h2"><span>1.1 General Specifications</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h3"><span>1.2 Environmental Compliance</span></div></li>
+      <li><div class="toc-row h3"><span>1.3 Compatibilities</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h3"><span>1.4 Product Main Parts</span><span class="toc-dots"></span></div></li>
+      <li style="margin-top:2mm;"><div class="toc-row h1"><span><strong>2</strong>&nbsp;&nbsp;Body and Heat-Sink</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h2"><span>2.1 Heat-Sink Operation Theory</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h2"><span>2.2 Body and Heat-Sink Description</span><span class="toc-dots"></span></div></li>
+      <li style="margin-top:2mm;"><div class="toc-row h1"><span><strong>3</strong>&nbsp;&nbsp;LED Chips</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h2"><span>3.1 Chip Performance Characteristics</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h3"><span>3.2 Electrical and Thermal Characteristics</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h4"><span>3.3 Absolute Maximum Ratings</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h4"><span>3.4 Characteristics Curves</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h5"><span>3.4.1 Light Output Characteristics</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h5"><span>3.4.2 Forward Current Characteristics</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h5"><span>3.4.3 Polar Curve</span><span class="toc-dots"></span></div></li>
+      <li style="margin-top:2mm;"><div class="toc-row h1"><span><strong>4</strong>&nbsp;&nbsp;Driver</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h2"><span>4.1 General Description</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h3"><span>4.2 Features</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h3"><span>4.3 Protections</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h3"><span>4.4 Module Specification</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h5"><span>4.4.1 AC Input Specification</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h5"><span>4.4.2 DC Output Characteristics</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h5"><span>4.4.3 Protection Specifications</span><span class="toc-dots"></span></div></li>
+      <li><div class="toc-row h5"><span>4.4.4 Mechanical Specification</span><span class="toc-dots"></span></div></li>
+    </ul>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 3 — §1 GENERAL SPECIFICATIONS
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="sec-h1">1. Product General Information</div>
+    <div class="sec-h2">1.1 General Specifications:</div>
+
+    <p class="tbl-caption">Table1: Product General Specifications</p>
+    <table class="tbl-center" style="width:70%;margin:0 auto 5mm;">
+      <thead>
+        <tr><th style="text-align:left;">Item</th><th>Specification</th><th>Unit</th></tr>
+      </thead>
+      <tbody>
+        {{#each generalSpecs}}
+        <tr>
+          <td class="lbl">{{ k }}</td>
+          <td class="val">{{ v }}</td>
+          <td class="unit">{{#if unit}}{{ unit }}{{/if}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 4 — §1.2 ENV + §1.3 COMPAT + §1.4 PARTS + §2.1 HEAT-SINK THEORY
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="sec-h2">1.2 Environmental Compliance:</div>
+    <!-- FIXED — only {{ product.typeName }} changes per product -->
+    <p class="body-p">Short Circuit is committed to providing environmentally friendly products to the solid-state lighting market. {{ product.typeName }} LED is compliant to the general environmental duty (GED). Short Circuit will not intentionally add the following restricted materials to its products: lead, mercury, cadmium, hexavalent chromium, polybrominated biphenyls (PBB) or polybrominated diphenyl ethers (PBDE).</p>
+
+    <div class="sec-h2">1.3 Compatibilities</div>
+    <!-- FIXED: same 6 certifications for all SC Philips-3030 products -->
+    <div class="cert-row" id="cert-row">
+      <div class="cert-item"><img src="compatibilities/RoHS.png" alt="RoHS" onerror="this.classList.add('img-error');this.nextElementSibling.style.display='block';"/><span class="cert-fallback">RoHS</span></div>
+      <div class="cert-item"><img src="compatibilities/ISO.png"  alt="ISO"  onerror="this.classList.add('img-error');this.nextElementSibling.style.display='block';"/><span class="cert-fallback">ISO</span></div>
+      <div class="cert-item"><img src="compatibilities/CE.png"   alt="CE"   onerror="this.classList.add('img-error');this.nextElementSibling.style.display='block';"/><span class="cert-fallback">CE</span></div>
+      <div class="cert-item"><img src="compatibilities/UL.png"   alt="UL"   onerror="this.classList.add('img-error');this.nextElementSibling.style.display='block';"/><span class="cert-fallback">UL</span></div>
+      <div class="cert-item"><img src="compatibilities/LM79.png" alt="LM79" onerror="this.classList.add('img-error');this.nextElementSibling.style.display='block';"/><span class="cert-fallback">LM79</span></div>
+      <div class="cert-item"><img src="compatibilities/LM80.png" alt="LM80" onerror="this.classList.add('img-error');this.nextElementSibling.style.display='block';"/><span class="cert-fallback">LM80</span></div>
+    </div>
+
+    <div class="sec-h2">1.4 Product Main Parts:</div>
+    <!-- FIXED — only {{ product.typeName }} changes per product -->
+    <p class="body-p">{{ product.typeName }} LED is mainly consisted of three parts described as following:</p>
+    <p class="body-p">Body and heat sink which is made of Aluminum alloy to dissipate the internal temperature of Chips and Drivers.</p>
+    <p class="body-p">Philips 3030 LED Chips with efficiency of 145Lm/W.</p>
+    <p class="body-p">Short Circuit Driver which is responsible for supplying the chip with required voltage and current. Also, the driver is protected against over voltage and over current occurrence.</p>
+
+    <div class="sec-h1">2. Body and Heat-Sink</div>
+    <div class="sec-h2">2.1 Heat-Sink Operation Theory</div>
+
+    <!-- Layout matching Screenshot 4: Left theory text, Right Figure 1 heatsink views -->
+    <div style="display:flex;gap:6mm;align-items:flex-start;margin-top:4mm;">
+      <div style="flex:1;">
+        <p class="body-p" style="line-height:1.6;margin-bottom:4mm;">Due to electronic circuits nature, there is over internal heat generated during the operation period. That heat needs to be dissipated to protect driver components from being damaged.</p>
+        <p class="body-p" style="line-height:1.6;">According to Heat Transfer Theory, materials with high thermal conductivity are used to transfer heat from the hot region to the cold one, space in our case, so a heat-sink made from Aluminum alloy is a suitable choice for this mission.</p>
+      </div>
+      <div style="flex:0 0 78mm;text-align:center;">
+        <div style="min-height:55mm;display:flex;align-items:center;justify-content:center;">
+          {{#if product.heatSinkImageUrl}}
+            <img src="{{ product.heatSinkImageUrl }}" alt="Body and Heat-Sink" style="max-width:100%;max-height:58mm;object-fit:contain;display:block;margin:0 auto;"/>
+          {{/if}}
+        </div>
+        <div class="fig-caption" style="font-weight:700;font-size:11px;margin-top:2mm;">Figure1: Body and Heat-Sink</div>
+      </div>
+    </div>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 5 — §2.2 BODY SPECS + §3 LED CHIPS + §3.1 CHIP PERFORMANCE
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="sec-h2">2.2 Body and Heat-Sink Description:</div>
+    <p class="tbl-caption">Table2: Body and Heat-Sink Description</p>
+    <table>
+      <thead><tr><th style="text-align:left;width:28%;">Item</th><th colspan="2">Description</th></tr></thead>
+      <tbody>
+        {{#each bodySpecs}}
+        <tr>
+          <td class="lbl">{{ k }}</td>
+          {{#if v2}}
+            <td class="val">{{ v }}</td>
+            <td class="val">{{ v2 }}</td>
+          {{else}}
+            <td colspan="2">{{ v }}</td>
+          {{/if}}
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    <div class="sec-h1">3. LED Chips</div>
+
+    <div class="clearfix">
+      <!-- Layout matching Screenshot 3: Right Figure 2 Philips Lumiled 3030 chip -->
+      {{#if product.chipImageUrl}}
+      <div class="float-right" style="margin-left:6mm;text-align:center;">
+        <img src="{{ product.chipImageUrl }}" alt="Philips Lumiled 3030" style="max-width:26mm;max-height:26mm;object-fit:contain;display:block;margin:0 auto;"/>
+        <div class="fig-caption" style="font-size:10px;font-weight:700;margin-top:2px;">Figure2: Philips Lumiled 3030</div>
+      </div>
+      {{/if}}
+
+      <div class="sec-h2">3.1 Chip Performance Characteristics</div>
+      <p class="tbl-caption">Table3: Chip Performance Characteristics</p>
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left;">Product</th>
+            <th>Nominal CCT</th>
+            <th>Minimum CRI</th>
+            <th>Typical Luminous Efficacy (lm/W)</th>
+            <th colspan="2">Luminous Flux (lm)</th>
+            <th>Part Number</th>
+          </tr>
+          <tr><th></th><th></th><th></th><th></th><th>Minimum</th><th>Typical</th><th></th></tr>
+        </thead>
+        <!-- FIXED: Philips LUXEON 3030 2D data — same for all SC products -->
+        <tbody>
+          <tr>
+            <td class="lbl" style="font-size:11px;">LUXEON<br>3030 2D<br>(Square LES)</td>
+            <td class="val">6500K</td>
+            <td class="val">90</td>
+            <td class="val">144</td>
+            <td class="val">94</td>
+            <td class="val">104</td>
+            <td class="val" style="font-size:10px;">L130-<br>6590003000X21</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 6 — §3.2 ELECTRICAL/THERMAL + §3.3 MAX RATINGS + §3.4.1 LIGHT OUTPUT CURVE
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="sec-h2">3.2 Electrical and Thermal Characteristics</div>
+    <p class="tbl-caption">Table4: Chip Electrical and Thermal Characteristics</p>
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:left;" rowspan="2">Part Number</th>
+          <th colspan="3">Forward Voltage (Vf)</th>
+          <th rowspan="2">Typical Temperature Coefficient of Forward Voltage [2] (mV/°C)</th>
+        </tr>
+        <tr><th>Minimum</th><th>Typical</th><th>Maximum</th></tr>
+      </thead>
+      <tbody>
+        <!-- FIXED: Philips 3030 electrical data -->
+        <tr>
+          <td class="lbl" style="font-size:10.5px;">L130-6590003000X21</td>
+          <td class="val">5.8</td>
+          <td class="val">6</td>
+          <td class="val">6.6</td>
+          <td class="val">-2 to -4</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sec-h2">3.3 Absolute Maximum Ratings</div>
+    <p class="tbl-caption">Table5: Chip Absolute Maximum Ratings</p>
+    <table>
+      <thead><tr><th style="text-align:left;">Parameter</th><th>Maximum Performance</th></tr></thead>
+      <tbody>
+        <!-- FIXED: Philips 3030 absolute max ratings -->
+        <tr><td class="lbl">DC Forward Current</td><td class="val">240mA</td></tr>
+        <tr><td class="lbl">Peak Pulsed Forward Current</td><td class="val">300mA</td></tr>
+        <tr><td class="lbl">LED Junction Temperature (DC &amp; Pulse)</td><td class="val">125°C</td></tr>
+        <tr><td class="lbl">Operating Case Temperature</td><td class="val">-40°C to 105°C</td></tr>
+        <tr><td class="lbl">LED Storage Temperature</td><td class="val">-40°C to 105°C</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sec-h2">3.4 Characteristics Curves</div>
+    <div class="sec-h3">3.4.1 Light Output Characteristics</div>
+
+    <!--
+      Figure3.a — Light Output vs Junction Temperature
+      Data source: chip.lightOutputCurve  [{x: tempC, y: normalizedOutput}]
+      Chart axes:  X = 0…120°C   Y = 0.7…1.1
+      SVG coords:  svgX = 60 + (x / 120) * 420
+                   svgY = 280 - ((y - 0.7) / 0.4) * 260
+    -->
+    <div class="chart-wrap">
+      <svg id="chart-fig3a" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"
+           style="max-width:115mm;border:1px solid #ddd;border-radius:6px;padding:4px;background:#fff;">
+        <!-- axes -->
+        <line x1="60" y1="20" x2="60" y2="280" stroke="#333" stroke-width="1.5"/>
+        <line x1="60" y1="280" x2="480" y2="280" stroke="#333" stroke-width="1.5"/>
+        <!-- axis labels -->
+        <text transform="rotate(-90,14,150)" x="14" y="150" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#555">Normalized Light Output [-]</text>
+        <text x="270" y="308" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#555">Junction Temperature [°C]</text>
+        <!-- Y ticks 0.7 to 1.1 (step 0.1) — svgY = 280 - ((val-0.7)/0.4)*260 -->
+        <g font-family="sans-serif" font-size="11" fill="#555" text-anchor="end">
+          <text x="54" y="284">0.7</text>
+          <text x="54" y="219">0.8</text>
+          <text x="54" y="154">0.9</text>
+          <text x="54" y="89">1.0</text>
+          <text x="54" y="24">1.1</text>
+        </g>
+        <!-- Y grid lines at y=0.8,0.9,1.0,1.1 -->
+        <g stroke="#eee" stroke-width="1">
+          <line x1="60" y1="219" x2="480" y2="219"/>
+          <line x1="60" y1="154" x2="480" y2="154"/>
+          <line x1="60" y1="89"  x2="480" y2="89"/>
+          <line x1="60" y1="24"  x2="480" y2="24"/>
+        </g>
+        <!-- X ticks 0,20,40,60,80,100,120 — svgX = 60 + (x/120)*420 -->
+        <g font-family="sans-serif" font-size="11" fill="#555" text-anchor="middle">
+          <text x="60"  y="295">0</text>
+          <text x="130" y="295">20</text>
+          <text x="200" y="295">40</text>
+          <text x="270" y="295">60</text>
+          <text x="340" y="295">80</text>
+          <text x="410" y="295">100</text>
+          <text x="480" y="295">120</text>
+        </g>
+        <!-- X grid lines -->
+        <g stroke="#eee" stroke-width="1">
+          <line x1="130" y1="20" x2="130" y2="280"/>
+          <line x1="200" y1="20" x2="200" y2="280"/>
+          <line x1="270" y1="20" x2="270" y2="280"/>
+          <line x1="340" y1="20" x2="340" y2="280"/>
+          <line x1="410" y1="20" x2="410" y2="280"/>
+        </g>
+        <!-- tick marks on axes -->
+        <g stroke="#555" stroke-width="1">
+          <line x1="55" y1="219" x2="65" y2="219"/>
+          <line x1="55" y1="154" x2="65" y2="154"/>
+          <line x1="55" y1="89"  x2="65" y2="89"/>
+          <line x1="55" y1="24"  x2="65" y2="24"/>
+          <line x1="130" y1="275" x2="130" y2="285"/>
+          <line x1="200" y1="275" x2="200" y2="285"/>
+          <line x1="270" y1="275" x2="270" y2="285"/>
+          <line x1="340" y1="275" x2="340" y2="285"/>
+          <line x1="410" y1="275" x2="410" y2="285"/>
+          <line x1="480" y1="275" x2="480" y2="285"/>
+        </g>
+        <!--
+          DATA POLYLINE — rendered by Handlebars helper or server-side JS.
+          For each point in chip.lightOutputCurve compute:
+            px = 60 + (point.x / 120) * 420
+            py = 280 - ((point.y - 0.7) / 0.4) * 260
+          Fallback static points match PDF curve shape exactly.
+        -->
+        <polyline
+          id="fig3a-data"
+          data-curve="lightOutputCurve"
+          data-xmin="0" data-xmax="120" data-xpx0="60" data-xpxrange="420"
+          data-ymin="0.7" data-ymax="1.1" data-ypx0="280" data-ypxrange="260"
+          points="60,21 130,43 200,77 270,120 340,170 410,219 480,258"
+          stroke="#2244cc" stroke-width="2.5" fill="none"/>
+      </svg>
+      <div class="fig-caption">Figure3.a: Chip Light Output Characteristics</div>
+    </div>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 7 — §3.4.2 FORWARD CURRENT CURVES
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <!--
+      Figure3.b — Relative Light Output vs Forward Current
+      Data source: chip.relOutputCurve  [{x: currentMA, y: relOutput}]
+      Chart axes:  X = 0…250 mA    Y = 0.0…2.0
+      SVG coords:  svgX = 60 + (x / 250) * 420
+                   svgY = 300 - (y / 2.0) * 280
+    -->
+    <div class="chart-wrap">
+      <svg id="chart-fig3b" viewBox="0 0 500 340" xmlns="http://www.w3.org/2000/svg"
+           style="max-width:115mm;border:1px solid #ddd;border-radius:6px;padding:4px;background:#fff;">
+        <line x1="60" y1="20" x2="60" y2="300" stroke="#333" stroke-width="1.5"/>
+        <line x1="60" y1="300" x2="480" y2="300" stroke="#333" stroke-width="1.5"/>
+        <text transform="rotate(-90,14,160)" x="14" y="160" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#555">Relative Light Output [-]</text>
+        <text x="270" y="326" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#555">Forward Current [mA]</text>
+        <!-- Y ticks 0.0 to 2.0 (step 0.5) — svgY = 300 - (y/2.0)*280 -->
+        <g font-family="sans-serif" font-size="11" fill="#555" text-anchor="end">
+          <text x="54" y="304">0.0</text>
+          <text x="54" y="234">0.5</text>
+          <text x="54" y="160">1.0</text>
+          <text x="54" y="90">1.5</text>
+          <text x="54" y="20">2.0</text>
+        </g>
+        <g stroke="#eee" stroke-width="1">
+          <line x1="60" y1="230" x2="480" y2="230"/>
+          <line x1="60" y1="160" x2="480" y2="160"/>
+          <line x1="60" y1="90"  x2="480" y2="90"/>
+          <line x1="60" y1="20"  x2="480" y2="20"/>
+        </g>
+        <!-- X ticks 0,50,100,150,200,250 — svgX = 60 + (x/250)*420 -->
+        <g font-family="sans-serif" font-size="11" fill="#555" text-anchor="middle">
+          <text x="60"  y="316">0</text>
+          <text x="144" y="316">50</text>
+          <text x="228" y="316">100</text>
+          <text x="312" y="316">150</text>
+          <text x="396" y="316">200</text>
+          <text x="480" y="316">250</text>
+        </g>
+        <g stroke="#eee" stroke-width="1">
+          <line x1="144" y1="20" x2="144" y2="300"/>
+          <line x1="228" y1="20" x2="228" y2="300"/>
+          <line x1="312" y1="20" x2="312" y2="300"/>
+          <line x1="396" y1="20" x2="396" y2="300"/>
+        </g>
+        <g stroke="#555" stroke-width="1">
+          <line x1="55" y1="230" x2="65" y2="230"/>
+          <line x1="55" y1="160" x2="65" y2="160"/>
+          <line x1="55" y1="90"  x2="65" y2="90"/>
+          <line x1="55" y1="20"  x2="65" y2="20"/>
+          <line x1="144" y1="295" x2="144" y2="305"/>
+          <line x1="228" y1="295" x2="228" y2="305"/>
+          <line x1="312" y1="295" x2="312" y2="305"/>
+          <line x1="396" y1="295" x2="396" y2="305"/>
+          <line x1="480" y1="295" x2="480" y2="305"/>
+        </g>
+        <!--
+          DATA POLYLINE — for each point in chip.relOutputCurve:
+            px = 60 + (point.x / 250) * 420
+            py = 300 - (point.y / 2.0) * 280
+        -->
+        <polyline
+          id="fig3b-data"
+          data-curve="relOutputCurve"
+          data-xmin="0" data-xmax="250" data-xpx0="60" data-xpxrange="420"
+          data-ymin="0" data-ymax="2.0" data-ypx0="300" data-ypxrange="280"
+          points="60,300 144,230 228,160 312,90 396,20 480,6"
+          stroke="#2244cc" stroke-width="2.5" fill="none"/>
+      </svg>
+      <div class="fig-caption">Figure3.b: Chip Light Output Characteristics</div>
+    </div>
+
+    <div class="sec-h3">3.4.2 Forward Current Characteristics</div>
+    <!--
+      Figure4 — Forward Current vs Forward Voltage (I-V curve)
+      Data source: chip.ivCurve  [{x: voltageV, y: currentMA}]
+      Chart axes:  X = 5.4…6.6 V    Y = 0…250 mA
+      SVG coords:  svgX = 60 + ((x - 5.4) / 1.2) * 420
+                   svgY = 300 - (y / 250) * 280
+    -->
+    <div class="chart-wrap">
+      <svg id="chart-fig4" viewBox="0 0 500 340" xmlns="http://www.w3.org/2000/svg"
+           style="max-width:115mm;border:1px solid #ddd;border-radius:6px;padding:4px;background:#fff;">
+        <line x1="60" y1="20" x2="60" y2="300" stroke="#333" stroke-width="1.5"/>
+        <line x1="60" y1="300" x2="480" y2="300" stroke="#333" stroke-width="1.5"/>
+        <text transform="rotate(-90,14,160)" x="14" y="160" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#555">Forward Current [mA]</text>
+        <text x="270" y="326" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#555">Forward Voltage [V]</text>
+        <!-- Y ticks 0,50,100,150,200,250 — svgY = 300 - (y/250)*280 -->
+        <g font-family="sans-serif" font-size="11" fill="#555" text-anchor="end">
+          <text x="54" y="304">0</text>
+          <text x="54" y="244">50</text>
+          <text x="54" y="188">100</text>
+          <text x="54" y="132">150</text>
+          <text x="54" y="76">200</text>
+          <text x="54" y="20">250</text>
+        </g>
+        <g stroke="#eee" stroke-width="1">
+          <line x1="60" y1="244" x2="480" y2="244"/>
+          <line x1="60" y1="188" x2="480" y2="188"/>
+          <line x1="60" y1="132" x2="480" y2="132"/>
+          <line x1="60" y1="76"  x2="480" y2="76"/>
+          <line x1="60" y1="20"  x2="480" y2="20"/>
+        </g>
+        <!-- X ticks 5.4,5.6,5.8,6.0,6.2,6.4,6.6 — svgX = 60 + ((x-5.4)/1.2)*420 -->
+        <g font-family="sans-serif" font-size="11" fill="#555" text-anchor="middle">
+          <text x="60"  y="316">5.4</text>
+          <text x="130" y="316">5.6</text>
+          <text x="200" y="316">5.8</text>
+          <text x="270" y="316">6.0</text>
+          <text x="340" y="316">6.2</text>
+          <text x="410" y="316">6.4</text>
+          <text x="480" y="316">6.6</text>
+        </g>
+        <g stroke="#eee" stroke-width="1">
+          <line x1="130" y1="20" x2="130" y2="300"/>
+          <line x1="200" y1="20" x2="200" y2="300"/>
+          <line x1="270" y1="20" x2="270" y2="300"/>
+          <line x1="340" y1="20" x2="340" y2="300"/>
+          <line x1="410" y1="20" x2="410" y2="300"/>
+        </g>
+        <g stroke="#555" stroke-width="1">
+          <line x1="55" y1="244" x2="65" y2="244"/>
+          <line x1="55" y1="188" x2="65" y2="188"/>
+          <line x1="55" y1="132" x2="65" y2="132"/>
+          <line x1="55" y1="76"  x2="65" y2="76"/>
+          <line x1="55" y1="20"  x2="65" y2="20"/>
+          <line x1="130" y1="295" x2="130" y2="305"/>
+          <line x1="200" y1="295" x2="200" y2="305"/>
+          <line x1="270" y1="295" x2="270" y2="305"/>
+          <line x1="340" y1="295" x2="340" y2="305"/>
+          <line x1="410" y1="295" x2="410" y2="305"/>
+          <line x1="480" y1="295" x2="480" y2="305"/>
+        </g>
+        <!--
+          DATA POLYLINE — for each point in chip.ivCurve:
+            px = 60 + ((point.x - 5.4) / 1.2) * 420
+            py = 300 - (point.y / 250) * 280
+        -->
+        <polyline
+          id="fig4-data"
+          data-curve="ivCurve"
+          data-xmin="5.4" data-xmax="6.6" data-xpx0="60" data-xpxrange="420"
+          data-ymin="0" data-ymax="250" data-ypx0="300" data-ypxrange="280"
+          points="60,299 90,297 130,292 165,280 200,262 235,238 270,204 305,162 340,115 375,66 410,22 450,8 480,4"
+          stroke="#2244cc" stroke-width="2.5" fill="none"/>
+      </svg>
+      <div class="fig-caption">Figure4: Chip Forward Current Characteristics</div>
+    </div>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 8 — §3.4.3 POLAR CURVE + §4 DRIVER INTRO
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="sec-h3">3.4.3 Polar Curve</div>
+    <!--
+      Figure5 — Goniophotometer Polar Curve
+      Data source: chip.beamAngleDeg  (number, e.g. 120)
+      The half-angle = beamAngleDeg / 2.
+      SVG origin (apex): cx=250, cy=280, radius=200px.
+      For angle θ from -90° to +90°, the beam intensity at that angle is
+      modelled as cos^n(θ) where n = ln(0.5) / ln(cos(halfAngle)).
+      The beam outline is traced as a polar path; scale = 200px at 0°.
+        svgX = 250 + intensity * 200 * sin(θ)
+        svgY = 280 - intensity * 200 * cos(θ)
+      Fallback static path drawn for 120° beam (half-angle = 60°).
+    -->
+    <div class="chart-wrap">
+      <svg id="chart-fig5" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"
+           style="max-width:115mm;border:1px solid #ddd;border-radius:6px;padding:4px;background:#fff;"
+           data-beam-angle="120">
+        <!-- concentric reference arcs (25%, 50%, 75%, 100%) -->
+        <g stroke="#ddd" stroke-width="0.8" fill="none">
+          <path d="M150,280 A100,100 0 1,1 350,280"/>
+          <path d="M100,280 A150,150 0 1,1 400,280"/>
+          <path d="M 50,280 A200,200 0 1,1 450,280"/>
+        </g>
+        <!-- radial guide lines every 15° from -90° to +90° -->
+        <g stroke="#ddd" stroke-width="0.8">
+          <!-- 0° vertical -->
+          <line x1="250" y1="280" x2="250" y2="80"/>
+          <!-- ±15° -->
+          <line x1="250" y1="280" x2="302" y2="86"/>
+          <line x1="250" y1="280" x2="198" y2="86"/>
+          <!-- ±30° -->
+          <line x1="250" y1="280" x2="350" y2="107"/>
+          <line x1="250" y1="280" x2="150" y2="107"/>
+          <!-- ±45° -->
+          <line x1="250" y1="280" x2="391" y2="138"/>
+          <line x1="250" y1="280" x2="109" y2="138"/>
+          <!-- ±60° -->
+          <line x1="250" y1="280" x2="423" y2="180"/>
+          <line x1="250" y1="280" x2="77"  y2="180"/>
+          <!-- ±75° -->
+          <line x1="250" y1="280" x2="443" y2="228"/>
+          <line x1="250" y1="280" x2="57"  y2="228"/>
+          <!-- ±90° horizontal -->
+          <line x1="50"  y1="280" x2="450" y2="280"/>
+        </g>
+        <!-- angle labels -->
+        <g font-family="sans-serif" font-size="11" fill="#444" text-anchor="middle">
+          <text x="250" y="70">0°</text>
+          <text x="310" y="80">15°</text>  <text x="190" y="80">15°</text>
+          <text x="360" y="100">30°</text> <text x="140" y="100">30°</text>
+          <text x="400" y="132">45°</text> <text x="100" y="132">45°</text>
+          <text x="436" y="178">60°</text> <text x="64"  y="178">60°</text>
+          <text x="455" y="225">75°</text> <text x="46"  y="225">75°</text>
+          <text x="462" y="292">90°</text> <text x="36"  y="292">90°</text>
+        </g>
+        <!-- % intensity labels along bottom axis -->
+        <g font-family="sans-serif" font-size="10" fill="#666" text-anchor="middle">
+          <text x="350" y="295">25%</text>
+          <text x="400" y="295">50%</text>
+          <text x="450" y="295">75%</text>
+          <text x="250" y="295">0%</text>
+        </g>
+        <!-- axes -->
+        <line x1="50"  y1="280" x2="450" y2="280" stroke="#555" stroke-width="1.5"/>
+        <line x1="250" y1="280" x2="250" y2="70"  stroke="#555" stroke-width="1.5"/>
+        <!--
+          BEAM CURVE — drawn by JS at runtime from chip.beamAngleDeg.
+          JS computes cos^n distribution, traces polar path.
+          Static fallback: 120° beam (half-angle 60°), n≈1.
+          Points computed: for θ = -90..+90 in 5° steps,
+            intensity = max(0, cos(θ))^1  (lambertian approx for 120° beam)
+            px = 250 + intensity*200*sin(θ)
+            py = 280 - intensity*200*cos(θ)
+        -->
+        <path id="fig5-beam"
+          data-beam-angle="120"
+          d="M250,280
+            L233,282 L216,289 L201,301 L189,317 L180,336 L175,356
+            L176,374 L184,388 L197,394 L214,392 L231,382 L247,366
+            L250,358
+            L253,366 L269,382 L286,392 L303,394 L316,388 L324,374
+            L325,356 L320,336 L311,317 L299,301 L284,289 L267,282 Z"
+          fill="rgba(30,60,200,0.10)" stroke="#2244cc" stroke-width="2.2"/>
+      </svg>
+      <div class="fig-caption">Figure5: Chip Polar Curve</div>
+    </div>
+
+    <div class="sec-h1" style="margin-top:4mm;">4. Driver</div>
+
+    <table style="width:auto;margin-bottom:4mm;">
+      <tbody>
+        <tr>
+          <td class="lbl" style="border:1px solid #000;padding:6px 14px;">Model number</td>
+          <td style="border:1px solid #000;padding:6px 20px;font-weight:700;">SC-LDF-35V1450mA</td>
+        </tr>
+        <tr>
+          <td class="lbl" style="border:1px solid #000;padding:6px 14px;">Type</td>
+          <td style="border:1px solid #000;padding:6px 20px;font-weight:700;">Universal isolated LED driver</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Layout matching Screenshot 2: Centered Figure 6 Short Circuit Driver -->
+    {{#if product.driverImageUrl}}
+    <div style="text-align:center;margin:4mm 0;">
+      <img src="{{ product.driverImageUrl }}" alt="Short Circuit Driver" style="max-width:85mm;max-height:48mm;object-fit:contain;display:inline-block;margin:0 auto;"/>
+      <div class="fig-caption" style="font-weight:700;font-size:11px;margin-top:2mm;">Figure6: Short Circuit Driver</div>
+    </div>
+    {{/if}}
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 9 — §4.1 DESCRIPTION + §4.2 FEATURES + §4.3 PROTECTIONS
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="two-col">
+      <div>
+        <div class="sec-h2">4.1 General Description</div>
+        <!-- FIXED: SC LDF driver description -->
+        <p class="body-p">LDF series is an offline LED lighting controller with high power factor, low THD and high constant current (CC) precision. It can achieve low system cost for an isolated lighting application by primary side control in a single stage converter. It significantly simplifies the LED lighting system design by eliminating the secondary side feedback components and the opto-coupler.</p>
+        <p class="body-p">The proprietary CC control is used, and the system can achieve high power factor with constant on-time control. Quasi-resonant (QR) operation and clamping frequency improve the system efficiency.</p>
+        <p class="body-p">The advanced start-up technology is used to meet the start-up time requirement (&lt;0.5s). The constant output current is compensated for tolerance of transformer inductance variation. Besides, the line compensation and load compensation are built in for high precisely constant output current control.</p>
+        <p class="body-p">This series offers comprehensive protection coverage with auto-recovery features including programmable VIN foldback, programmable VIN OVP, programmable thermal foldback, LED open loop protection, LED short circuit protection, cycle-by-cycle current limiting, built-in leading-edge blanking, VDD under voltage lockout (UVLO).</p>
+      </div>
+
+      <div>
+        <div class="sec-h2">4.2 Features</div>
+        <ul class="check-list">
+          <!-- FIXED: SC LDF driver features -->
+          <li>Primary-side control with single stage PFC LED driver for low system cost,</li>
+          <li>High PF (&gt;0.95),</li>
+          <li>Low THD (&lt;10%),</li>
+          <li>High efficiency (&gt;85%),</li>
+          <li>Life time up to 50,000 hours</li>
+          <li>Pre-programmed VIN foldback,</li>
+          <li>Pre-programmed VIN OVP,</li>
+          <li>Pre-programmed thermal foldback,</li>
+          <li>Pre-programmed CC regulation,</li>
+          <li>High precision constant current,</li>
+          <li>Fast start-up time (&lt;0.5s),</li>
+          <li>Built-in line/load compensation,</li>
+          <li>No visible flicker, and audible noise free</li>
+        </ul>
+
+        <div class="sec-h2">4.3 Protection</div>
+        <ul class="check-list">
+          <!-- FIXED: SC LDF driver protections -->
+          <li>LED short circuit protection,</li>
+          <li>LED open circuit protection,</li>
+          <li>VDD over/under voltage protection,</li>
+          <li>Lightning surge voltage up to 10 kV,</li>
+          <li>AC input overvoltage protection,</li>
+          <li>AC input overcurrent protection.</li>
+        </ul>
+<p class="body-p">The LED driver recovers automatically and back to normal operation after all fault causes are removed.</p>
+      </div>
+    </div>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 10 — §4.4 MODULE SPEC: AC INPUT + DC OUTPUT
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="sec-h2">4.4 Module Specification</div>
+    <p class="body-p">This section presents the specification of the LED driver, normal operating range, and the driver performance.</p>
+
+    <div class="sec-h3">4.4.1 AC Input Specification</div>
+    <p class="tbl-caption">Table6: AC input specification</p>
+    <table>
+      <tbody>
+        <!-- FIXED: SC LDF AC input specs -->
+        <tr><td class="lbl">LED driver max. apparent power</td><td>56W at full load 95Vac&lt;Vin&lt;275Vac</td></tr>
+        <tr><td class="lbl">AC input voltage rating</td><td>30Vac ~ 300Vac</td></tr>
+        <tr><td class="lbl">AC input voltage range for normal operation</td><td>90Vac ~ 275Vac</td></tr>
+        <tr><td class="lbl">AC input voltage range for foldback operation</td><td>30Vac ~ 90Vac</td></tr>
+        <tr><td class="lbl">AC input frequency range</td><td>47Hz ~ 63Hz</td></tr>
+        <tr><td class="lbl">Power factor</td><td>&gt;0.95 at 220Vac full load</td></tr>
+        <tr><td class="lbl">AC input current THD</td><td>&lt;10% at 220Vac full load</td></tr>
+        <tr><td class="lbl">AC max. input current</td><td>&lt;0.8A at 95Vac full load</td></tr>
+        <tr><td class="lbl">Efficiency</td><td>&gt;85% at 220Vac full load</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sec-h3">4.4.2 DC Output Characteristics</div>
+    <p class="tbl-caption">Table7: DC output characteristics</p>
+    <table>
+      <tbody>
+        <!-- FIXED: SC LDF DC output specs -->
+        <tr><td class="lbl">DC output voltage</td><td>20 ~ 35 Vdc</td></tr>
+        <tr><td class="lbl">Output voltage ripples</td><td>&lt;2.5 V peak-peak at max. load</td></tr>
+        <tr><td class="lbl">DC output constant-current</td><td>1450 mA, ±5%</td></tr>
+        <tr><td class="lbl">Output current ripples</td><td>&lt;45%</td></tr>
+        <tr><td class="lbl">Maximum output power</td><td>50 W</td></tr>
+        <tr><td class="lbl">Line regulation</td><td>±5%</td></tr>
+        <tr><td class="lbl">Load regulation</td><td>±5%</td></tr>
+        <tr><td class="lbl">Start-up time</td><td>&lt; 600 ms at 220Vac full load</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 11 — §4.4.3 PROTECTION SPECS + §4.4.4 MECHANICAL DRAWING
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="sec-h3">4.4.3 Protection Specifications</div>
+    <p class="tbl-caption">Table8: Protection specifications</p>
+    <table>
+      <tbody>
+        <!-- FIXED: SC LDF protection thresholds -->
+        <tr><td class="lbl">AC input overvoltage</td><td>275Vac ~ 300Vac</td></tr>
+        <tr><td class="lbl">AC input foldback voltage</td><td>85Vac ~ 95Vac</td></tr>
+        <tr><td class="lbl">DC output open circuit overvoltage</td><td>41 ~ 45 Vdc</td></tr>
+        <tr><td class="lbl">Thermal foldback temperature</td><td>100℃</td></tr>
+        <tr><td class="lbl">Lightning surge</td><td>Up to 10 kV</td></tr>
+        <tr><td class="lbl">Controller IC VDD undervoltage protection</td><td>9 Vdc</td></tr>
+        <tr><td class="lbl">Controller IC VDD overvoltage protection</td><td>24 Vdc</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sec-h3">4.4.4 Mechanical Specification</div>
+    <!--
+      MECHANICAL DRAWING — the SVG below uses driver.mechDims values
+      for the annotation text labels. The proportional drawing geometry
+      is fixed (standard rectangular driver case shape). Only the labels change.
+    -->
+    <div class="dim-box" style="border:1.5px solid #222;padding:12px;background:#fff;margin:4mm 0 2mm 0;">
+      {{#if product.driverBodyImageUrl}}
+        <div style="min-height:50mm;display:flex;align-items:center;justify-content:center;">
+          <img src="{{ product.driverBodyImageUrl }}" alt="Driver mechanical dimensions" style="max-width:100%;max-height:85mm;object-fit:contain;display:block;margin:0 auto;"/>
+        </div>
+      {{else}}
+      <!-- MECHANICAL DRAWING — redrawn to match reference exactly -->
+      <svg viewBox="0 0 620 430" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+
+        <!-- ══ TOP VIEW (connector/flange view) ══ -->
+        <!-- main outer rectangle -->
+        <rect x="70" y="25" width="430" height="105" fill="white" stroke="#333" stroke-width="2"/>
+        <!-- inner shaded rectangle (PCB area) -->
+        <rect x="100" y="25" width="370" height="90" fill="#eeeeee" stroke="#555" stroke-width="1.5"/>
+        <!-- LEFT round bump (cable gland) -->
+        <ellipse cx="55" cy="72" rx="18" ry="28" fill="white" stroke="#333" stroke-width="1.8"/>
+        <!-- RIGHT round bump -->
+        <ellipse cx="515" cy="72" rx="18" ry="28" fill="white" stroke="#333" stroke-width="1.8"/>
+        <!-- top connector raised box -->
+        <rect x="190" y="10" width="190" height="25" fill="white" stroke="#333" stroke-width="1.5"/>
+
+        <!-- ══ BOTTOM VIEW (case body front) ══ -->
+        <!-- outer case box -->
+        <rect x="70" y="240" width="430" height="100" fill="white" stroke="#555" stroke-width="2"/>
+        <!-- inner dashed PCB rectangle -->
+        <rect x="95" y="258" width="380" height="64" fill="none" stroke="#888" stroke-width="1.2" stroke-dasharray="6,4"/>
+
+        <!-- ══ DIMENSION ANNOTATIONS ══ -->
+
+        <!-- 97.1mm — outer width, below top view -->
+        <line x1="70"  y1="152" x2="500" y2="152" stroke="#333" stroke-width="1.2"/>
+        <line x1="70"  y1="146" x2="70"  y2="158" stroke="#333" stroke-width="1.2"/>
+        <line x1="500" y1="146" x2="500" y2="158" stroke="#333" stroke-width="1.2"/>
+        <polygon points="74,149 86,152 74,155" fill="#333"/>
+        <polygon points="496,149 484,152 496,155" fill="#333"/>
+        <text x="285" y="148" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#333">97.1mm</text>
+
+        <!-- 91.4mm — case span -->
+        <line x1="100" y1="168" x2="470" y2="168" stroke="#333" stroke-width="1.2"/>
+        <line x1="100" y1="162" x2="100" y2="174" stroke="#333" stroke-width="1.2"/>
+        <line x1="470" y1="162" x2="470" y2="174" stroke="#333" stroke-width="1.2"/>
+        <polygon points="104,165 116,168 104,171" fill="#333"/>
+        <polygon points="466,165 454,168 466,171" fill="#333"/>
+        <text x="285" y="164" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#333">91.4mm</text>
+
+        <!-- 83.9mm — above bottom view -->
+        <line x1="100" y1="228" x2="470" y2="228" stroke="#333" stroke-width="1.2"/>
+        <line x1="100" y1="222" x2="100" y2="234" stroke="#333" stroke-width="1.2"/>
+        <line x1="470" y1="222" x2="470" y2="234" stroke="#333" stroke-width="1.2"/>
+        <polygon points="104,225 116,228 104,231" fill="#333"/>
+        <polygon points="466,225 454,228 466,231" fill="#333"/>
+        <text x="285" y="224" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#333">83.9mm</text>
+
+        <!-- 80mm — dashed, above 83.9mm -->
+        <line x1="120" y1="214" x2="450" y2="214" stroke="#777" stroke-width="1" stroke-dasharray="5,4"/>
+        <line x1="120" y1="209" x2="120" y2="219" stroke="#777" stroke-width="1"/>
+        <line x1="450" y1="209" x2="450" y2="219" stroke="#777" stroke-width="1"/>
+        <text x="285" y="210" font-family="sans-serif" font-size="11" text-anchor="middle" fill="#666">80mm</text>
+
+        <!-- 33mm — right side height of bottom view -->
+        <line x1="565" y1="240" x2="565" y2="340" stroke="#333" stroke-width="1.2"/>
+        <line x1="559" y1="240" x2="571" y2="240" stroke="#333" stroke-width="1.2"/>
+        <line x1="559" y1="340" x2="571" y2="340" stroke="#333" stroke-width="1.2"/>
+        <polygon points="562,244 565,256 568,244" fill="#333"/>
+        <polygon points="562,336 565,324 568,336" fill="#333"/>
+        <text x="590" y="295" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#333" transform="rotate(90,590,295)">33mm</text>
+
+        <!-- 22mm — right side height of top view -->
+        <line x1="565" y1="25"  x2="565" y2="130" stroke="#333" stroke-width="1.2"/>
+        <line x1="559" y1="25"  x2="571" y2="25"  stroke="#333" stroke-width="1.2"/>
+        <line x1="559" y1="130" x2="571" y2="130" stroke="#333" stroke-width="1.2"/>
+        <polygon points="562,29 565,41 568,29" fill="#333"/>
+        <polygon points="562,126 565,114 568,126" fill="#333"/>
+        <text x="590" y="82" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#333" transform="rotate(90,590,82)">22mm</text>
+
+      </svg>
+      {{/if}}
+      <div class="fig-caption" style="font-weight:700;font-size:11px;padding-top:6px;border-top:1px solid #222;margin-top:6px;text-align:center;">Figure 7: Driver mechanical dimensions in water-proof case IP65</div>
+    </div>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     RUNTIME CHART RENDERER
+     Reads data-* attributes from each polyline
+     and repaints them from the template data
+     arrays injected as JSON into data-points.
+══════════════════════════════════════════ -->
+<script>
+/*
+  How to use with your template engine:
+  After Handlebars renders the HTML, call window.SC_CHART_DATA = { ... }
+  with the chip curve arrays before this script runs, OR inject them
+  directly as a JSON data attribute on a <script id="sc-chart-data"> tag.
+
+  Expected format:
+    window.SC_CHART_DATA = {
+      lightOutputCurve: [{x:0,y:1.05},{x:20,y:1.02}, ...],
+      relOutputCurve:   [{x:0,y:0},{x:50,y:0.5}, ...],
+      ivCurve:          [{x:5.4,y:5},{x:5.6,y:20}, ...]
+    };
+*/
+(function() {
+  var data = window.SC_CHART_DATA || {};
+
+  function renderPolyline(el, points, toX, toY) {
+    if (!el || !points || !points.length) return;
+    var pts = points.map(function(p) {
+      return toX(p.x).toFixed(2) + ',' + toY(p.y).toFixed(2);
+    }).join(' ');
+    el.setAttribute('points', pts);
+  }
+
+  // Figure 3.a — Light Output vs Junction Temperature
+  var el3a = document.getElementById('fig3a-data');
+  if (el3a && data.lightOutputCurve) {
+    renderPolyline(el3a, data.lightOutputCurve,
+      function(x) { return 60 + (x / 120) * 420; },
+      function(y) { return 280 - ((y - 0.7) / 0.4) * 260; }
+    );
+  }
+
+  // Figure 3.b — Relative Light Output vs Forward Current
+  var el3b = document.getElementById('fig3b-data');
+  if (el3b && data.relOutputCurve) {
+    renderPolyline(el3b, data.relOutputCurve,
+      function(x) { return 60 + (x / 250) * 420; },
+      function(y) { return 300 - (y / 2.0) * 280; }
+    );
+  }
+
+  // Figure 4 — Forward Current vs Voltage
+  var el4 = document.getElementById('fig4-data');
+  if (el4 && data.ivCurve) {
+    renderPolyline(el4, data.ivCurve,
+      function(x) { return 60 + ((x - 5.4) / 1.2) * 420; },
+      function(y) { return 300 - (y / 250) * 280; }
+    );
+  }
+
+  // Figure 5 — Polar curve from beamAngleDeg
+  var fig5 = document.getElementById('fig5-beam');
+  if (fig5) {
+    var beamDeg = parseFloat(fig5.dataset.beamAngle) || 120;
+    var halfRad = (beamDeg / 2) * Math.PI / 180;
+    // compute Lambertian exponent: n = ln(0.5)/ln(cos(halfAngle))
+    var n = Math.log(0.5) / Math.log(Math.cos(halfRad));
+    var cx = 250, cy = 280, R = 200;
+    var pts = [];
+    // trace from -90° to +90° in 3° steps
+    for (var deg = -90; deg <= 90; deg += 3) {
+      var rad = deg * Math.PI / 180;
+      var intensity = Math.max(0, Math.pow(Math.cos(rad), n));
+      pts.push({
+        x: cx + intensity * R * Math.sin(rad),
+        y: cy - intensity * R * Math.cos(rad)
+      });
+    }
+    // close back to apex
+    pts.push({x: cx, y: cy});
+    var d = 'M' + cx + ',' + cy + ' L' +
+      pts.map(function(p){ return p.x.toFixed(2)+','+p.y.toFixed(2); }).join(' L') + ' Z';
+    fig5.setAttribute('d', d);
+  }
+})();
+</script>
+
+</body>
+</html>

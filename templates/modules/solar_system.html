@@ -1,0 +1,179 @@
+<!-- ══════════════════════════════════════════
+     SOLAR LIGHTING SYSTEM MODULE
+     2-Page Layout: Applications, Photometrics, Solar PV Panel, Lithium Battery & Control Modes
+══════════════════════════════════════════ -->
+
+<!-- PAGE 1 — HERO, APPLICATIONS & PHOTOMETRIC DATA -->
+<div class="page">
+  <div class="page-main">
+    <div class="scr-header">
+      <img src="logo.png" alt="Short Circuit"/>
+      <span class="doc-ref">{{ product.modelNumber }} · SOLAR DATASHEET</span>
+    </div>
+
+    <!-- Product Title & Intro -->
+    <div style="margin-bottom:4mm;">
+      <h1 class="page-title" style="margin-bottom:1mm;">{{ product.name }}</h1>
+      <div class="page-subtitle" style="margin-bottom:3mm;">Standalone Solar Photovoltaic Outdoor Luminaire</div>
+    </div>
+
+    <div style="display:flex;gap:8mm;align-items:flex-start;margin-bottom:5mm;">
+      <!-- Hero Image -->
+      <div style="flex:0 0 75mm;text-align:center;">
+        <div style="width:75mm;height:65mm;border:1px solid #e5e7eb;border-radius:6px;display:flex;align-items:center;justify-content:center;background:#fff;padding:3mm;">
+          {{#if product.heroImageUrl}}
+            <img src="{{ product.heroImageUrl }}" alt="{{ product.name }}" style="max-width:100%;max-height:100%;object-fit:contain;display:block;margin:0 auto;"/>
+          {{else}}
+            <span style="font-family:var(--font-body);color:var(--muted);font-size:11px;">No product photo</span>
+          {{/if}}
+        </div>
+      </div>
+
+      <!-- Applications & Benefits -->
+      <div style="flex:1;">
+        <div class="orange-label">AREAS OF APPLICATION</div>
+        <div class="badge-wrap" style="margin-bottom:3mm;">
+          {{#each solarApps}}
+          <span class="badge-tag">{{ this }}</span>
+          {{/each}}
+        </div>
+
+        <div class="orange-label" style="margin-top:2mm;">PRODUCT BENEFITS</div>
+        <ul class="bullet-list" style="margin-bottom:2mm;">
+          {{#each solarBenefits}}
+          <li>{{ this }}</li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Technical Data Grid -->
+    <div class="two-col" style="gap:6mm;">
+      <!-- Electrical & System Data -->
+      <div>
+        <div class="sec-h2" style="margin-top:0;">ELECTRICAL &amp; SYSTEM DATA</div>
+        <table>
+          <tbody>
+            <tr><td class="lbl">Nominal System Power</td><td>{{ solarSpecs.power }}</td></tr>
+            <tr><td class="lbl">Operating System Voltage</td><td>{{ solarSpecs.systemVoltage }}</td></tr>
+            <tr><td class="lbl">Controller Type</td><td>Intelligent MPPT / PWM Solar Controller</td></tr>
+            <tr><td class="lbl">Operating Temperature</td><td>-20°C ~ +60°C</td></tr>
+            <tr><td class="lbl">Sensor Integration</td><td>Built-in microwave / PIR motion sensor</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Photometric Data -->
+      <div>
+        <div class="sec-h2" style="margin-top:0;">PHOTOMETRIC DATA</div>
+        <table>
+          <tbody>
+            <tr><td class="lbl">LED Chip</td><td>High-lumen Lumileds / Sanan SMD</td></tr>
+            <tr><td class="lbl">LED Efficacy</td><td>{{ solarSpecs.efficacy }}</td></tr>
+            <tr><td class="lbl">Total Luminous Flux</td><td>{{ solarSpecs.luminousFlux }}</td></tr>
+            <tr><td class="lbl">Color Temperature (CCT)</td><td>{{ solarSpecs.cct }}</td></tr>
+            <tr><td class="lbl">Color Rendering (CRI)</td><td>{{ solarSpecs.cri }}</td></tr>
+            <tr><td class="lbl">Beam Angle</td><td>{{ solarSpecs.beamAngle }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  <div class="scr-footer">
+    <div class="fl">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div>
+    </div>
+    <div class="fr">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2 — SOLAR PANEL, BATTERY PACK, LIFESPAN & WORKING MODES -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header">
+      <img src="logo.png" alt="Short Circuit"/>
+      <span class="doc-ref">{{ product.modelNumber }} · SOLAR DATASHEET</span>
+    </div>
+
+    <div class="sec-h1" style="margin-top:0;">Solar PV &amp; Storage Characteristics</div>
+
+    <div class="two-col" style="gap:8mm;margin-bottom:6mm;">
+      <!-- Solar Panel Data -->
+      <div>
+        <div class="sec-h2" style="margin-top:0;">SOLAR PANEL DATA</div>
+        <table>
+          <tbody>
+            <tr><td class="lbl">Solar Panel Type</td><td>{{ solarPvSpecs.panelType }}</td></tr>
+            <tr><td class="lbl">Panel Rated Power</td><td>{{ solarPvSpecs.panelPower }}</td></tr>
+            <tr><td class="lbl">PV Conversion Efficiency</td><td>&gt; 21.5% High-Efficiency Cells</td></tr>
+            <tr><td class="lbl">Cell Encapsulation</td><td>Tempered Glass + Anti-UV EVA</td></tr>
+            <tr><td class="lbl">PV Service Life</td><td>25 Years Performance Warranty</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sec-h2" style="margin-top:4mm;">COLORS &amp; MATERIALS</div>
+        <table>
+          <tbody>
+            <tr><td class="lbl">Body Material</td><td>{{ solarMechSpecs.bodyMaterial }}</td></tr>
+            <tr><td class="lbl">Optical Diffuser</td><td>UV-stabilized Polycarbonate</td></tr>
+            <tr><td class="lbl">Hardware &amp; Bracket</td><td>Hot-dip galvanized / Stainless steel</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Battery Data -->
+      <div>
+        <div class="sec-h2" style="margin-top:0;">BATTERY STORAGE DATA</div>
+        <table>
+          <tbody>
+            <tr><td class="lbl">Battery Chemistry</td><td>{{ solarBatterySpecs.batteryType }}</td></tr>
+            <tr><td class="lbl">Battery Capacity</td><td>{{ solarBatterySpecs.batteryPower }}</td></tr>
+            <tr><td class="lbl">Full Charging Time</td><td>{{ solarBatterySpecs.chargingTime }} (Direct Sunlight)</td></tr>
+            <tr><td class="lbl">Discharging Autonomy</td><td>{{ solarBatterySpecs.dischargingTime }} (Continuous)</td></tr>
+            <tr><td class="lbl">Battery Cycle Life</td><td>&gt; 2,000 cycles (80% DOD)</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sec-h2" style="margin-top:4mm;">LIFESPAN &amp; PROTECTION</div>
+        <table>
+          <tbody>
+            <tr><td class="lbl">LED Lifetime</td><td>{{ solarLifespanSpecs.lifetime }}</td></tr>
+            <tr><td class="lbl">System Warranty</td><td>{{ solarLifespanSpecs.warranty }}</td></tr>
+            <tr><td class="lbl">Ingress Protection (IP)</td><td><strong>IP65 Weatherproof</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Working Modes Box -->
+    <div style="background:#fafafa;border:1px solid #e5e7eb;border-radius:6px;padding:5mm 6mm;margin-bottom:5mm;">
+      <div class="orange-label" style="margin-bottom:2mm;">INTELLIGENT ENERGY MANAGEMENT MODES</div>
+      <p class="body-p" style="margin-bottom:2mm;"><strong>Motion Sensor Mode:</strong> 100% full brightness when pedestrian/vehicle movement is detected; automatically dims to 30% standby power after 30 seconds of inactivity to conserve stored energy.</p>
+      <p class="body-p" style="margin-bottom:0;"><strong>Time-Based Power Curves:</strong> Programmable multi-interval dimming: 4 hours at 100% brightness during peak traffic, 4 hours at 50% during mid-night hours, and 100% before sunrise until dawn.</p>
+    </div>
+
+    <!-- Compliance Badges -->
+    <div class="cert-row" style="justify-content:center;gap:12mm;margin-top:4mm;">
+      <div class="cert-item"><span class="cert-fallback" style="display:block;">CE CERTIFIED</span></div>
+      <div class="cert-item"><span class="cert-fallback" style="display:block;">RoHS 2.0</span></div>
+      <div class="cert-item"><span class="cert-fallback" style="display:block;">IP65 WATERPROOF</span></div>
+      <div class="cert-item"><span class="cert-fallback" style="display:block;">LiFePO4 SAFE</span></div>
+    </div>
+
+  </div>
+  <div class="scr-footer">
+    <div class="fl">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div>
+    </div>
+    <div class="fr">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,2 @@
+source_folder,source_file,markdown_file,pages,images_extracted,text_chars,flagged_pages,vision_applied,error
+Battery datasheet,Battery datasheet.pdf,Battery_datasheet.md,5,0,4566,,False,

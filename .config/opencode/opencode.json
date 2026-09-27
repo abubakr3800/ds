@@ -1,0 +1,17 @@
+{
+  "provider": {
+    "codecraft": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "CodeCraft API",
+      "options": {
+        "baseURL": "https://codecraftapi.com/v1",
+        "apiKey": "cc_az0WYUXbpUJvJfIvve1DzwhYbcJBzfmTSD1msEuWvBkNf5rl"
+      },
+      "models": {
+        "claude-opus-4.8": {
+          "name": "claude-opus-4.8"
+        }
+      }
+    }
+  }
+}

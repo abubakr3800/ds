@@ -1,0 +1,256 @@
+<!-- ══════════════════════════════════════════
+     BATTERY & EMERGENCY POWER KIT MODULE
+     Pages 2 - 5: Technical Specs, Features & Compliance Certificates
+══════════════════════════════════════════ -->
+
+<!-- PAGE 2 — TECHNICAL SPECIFICATIONS & FEATURES -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header">
+      <img src="logo.png" alt="Short Circuit"/>
+      <span class="doc-ref">{{ product.modelNumber }} · EMERGENCY KIT</span>
+    </div>
+
+    <div class="sec-h1" style="margin:3mm 0 2mm;">1. Product Overview &amp; Key Features</div>
+    <p class="body-p" style="margin-bottom:2mm;font-size:11px;">The Short Circuit Emergency Power Kit is an integrated battery management and emergency inverter unit designed to provide immediate, reliable backup illumination in commercial and industrial installations upon loss of main AC power.</p>
+
+    <div class="two-col" style="margin-bottom:3mm;gap:6mm;">
+      <div>
+        <div class="sec-h2" style="margin:0 0 1mm;font-size:11.5px;">Key Features:</div>
+        <ul class="check-list" style="margin:0;font-size:11px;">
+          {{#each batteryFeatures}}
+          <li style="margin-bottom:1px;font-size:11px;">{{ this }}</li>
+          {{/each}}
+        </ul>
+      </div>
+      <div>
+        <div class="sec-h2" style="margin:0 0 1mm;font-size:11.5px;">System Highlights:</div>
+        <ul class="bullet-list" style="margin:0;font-size:11px;">
+          <li style="margin-bottom:1.5mm;font-size:11px;">Automatic instant changeover upon mains outage (&lt;0.5s).</li>
+          <li style="margin-bottom:1.5mm;font-size:11px;">Dual push-button and automated routine diagnostics.</li>
+          <li style="margin-bottom:1.5mm;font-size:11px;">High-temperature flame-retardant internal components.</li>
+          <li style="margin-bottom:1.5mm;font-size:11px;">Constant current float charging extending cell service life.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sec-h1" style="margin:3mm 0 2mm;">2. Technical Specifications</div>
+    <p class="tbl-caption" style="margin-bottom:2px;font-size:10.5px;">Table 1: Emergency Power Kit Electrical &amp; Operational Parameters</p>
+    <table class="tbl-center" style="width:100%;margin-bottom:3mm;font-size:11px;">
+      <thead>
+        <tr>
+          <th style="width:35%;text-align:left;padding:3px 6px;">Parameter</th>
+          <th style="text-align:left;padding:3px 6px;">Specification / Value</th>
+          <th style="width:22%;text-align:center;padding:3px 6px;">Standard / Mode</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each batterySpecs}}
+        <tr>
+          <td class="lbl" style="padding:2.5px 6px;">{{ k }}</td>
+          <td style="padding:2.5px 6px;">{{ v }}</td>
+          <td style="text-align:center;color:var(--muted);font-weight:600;padding:2.5px 6px;font-size:10px;">{{ note }}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    {{#if batteryWiringImageUrl}}
+    <div style="text-align:center;margin-top:2mm;">
+      <img src="{{ batteryWiringImageUrl }}" alt="Wiring & Installation" style="max-width:110mm;max-height:34mm;object-fit:contain;display:inline-block;border:1px solid #e5e7eb;border-radius:4px;padding:2px;background:#fff;"/>
+      <div class="fig-caption" style="font-size:10px;margin-top:2px;">Figure 1: Emergency Power Kit Configuration &amp; Wiring Diagram</div>
+    </div>
+    {{/if}}
+
+  </div>
+  <div class="scr-footer">
+    <div class="fl">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div>
+    </div>
+    <div class="fr">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3 — CERTIFICATE OF COMPLIANCE: RoHS 2.0 DIRECTIVE -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header">
+      <img src="logo.png" alt="Short Circuit"/>
+      <span class="doc-ref">{{ product.modelNumber }} · COMPLIANCE CERTIFICATE</span>
+    </div>
+
+    <div class="sec-h1">3. Certificate of Compliance — RoHS 2.0 Directive</div>
+    <p class="body-p">The Emergency Power Kit series has been certified by independent testing laboratory Dongguan True Safety Testing Co., Ltd. for full compliance with the European Council RoHS 2.0 Directive.</p>
+
+    <div class="cert-card">
+      <div class="cert-header">
+        <div>
+          <div class="cert-title">Certificate of Compliance (RoHS)</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Directive (EU) 2015/863 &amp; (EU) 2017/2102 amending 2011/65/EU</div>
+        </div>
+        <div class="cert-no">CERT NO: TST20221080078-3RC</div>
+      </div>
+
+      <table class="cert-table">
+        <tbody>
+          <tr><td class="lbl">Sample Description</td><td>Emergency Light &amp; Power Kit</td></tr>
+          <tr><td class="lbl">Main Model</td><td><strong>HY-04C / LM1081</strong></td></tr>
+          <tr><td class="lbl">Series Models</td><td>HY-03J, HY-03F, HY-1099, HY-1098, HY-1038, HY-1068, HY-04B, HY-04A, HY-04M, HY-04N</td></tr>
+          <tr><td class="lbl">Test Standards</td><td>IEC 62321-1:2013, IEC 62321-3-1:2013, IEC 62321-4:2013+AMD1:2017, IEC 62321-5:2013, IEC 62321-6:2015, IEC 62321-7-1/2, IEC 62321-8:2017</td></tr>
+          <tr><td class="lbl">Test Report No.</td><td><strong>TST20221080078-3RR</strong></td></tr>
+          <tr><td class="lbl">Issue Date</td><td>October 15, 2022</td></tr>
+          <tr><td class="lbl">Testing Facility</td><td>Dongguan True Safety Testing Co., Ltd. (Accredited CNAS/ILAC)</td></tr>
+        </tbody>
+      </table>
+
+      <div style="background:#f8fafc;border-left:3px solid var(--orange);padding:3mm 4mm;margin-top:3mm;font-size:11px;color:#4b5563;line-height:1.5;">
+        <strong>Statement of Conformity:</strong> The equipment under test (EUT) described above has been consolidated and found in compliance with the Council RoHS 2.0 Directive (EU) 2015/863 and (EU) 2017/2102 amending Annex II to Directive 2011/65/EU regarding restriction of hazardous substances.
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:center;gap:12mm;margin-top:8mm;">
+      <div style="border:1.5px solid #16a34a;color:#16a34a;padding:4mm 8mm;border-radius:4px;font-weight:700;font-size:12px;text-align:center;letter-spacing:1px;">
+        RoHS 2.0 COMPLIANT
+      </div>
+      <div style="border:1.5px solid #2563eb;color:#2563eb;padding:4mm 8mm;border-radius:4px;font-weight:700;font-size:12px;text-align:center;letter-spacing:1px;">
+        LABORATORY TESTED
+      </div>
+    </div>
+
+  </div>
+  <div class="scr-footer">
+    <div class="fl">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div>
+    </div>
+    <div class="fr">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 4 — CERTIFICATE OF COMPLIANCE: EMC DIRECTIVE -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header">
+      <img src="logo.png" alt="Short Circuit"/>
+      <span class="doc-ref">{{ product.modelNumber }} · COMPLIANCE CERTIFICATE</span>
+    </div>
+
+    <div class="sec-h1">4. Certificate of Compliance — Electromagnetic Compatibility (EMC)</div>
+    <p class="body-p">The equipment under test has been evaluated and confirmed compliant with the Electromagnetic Compatibility Directive 2014/30/EU, enabling CE marking conformity.</p>
+
+    <div class="cert-card">
+      <div class="cert-header">
+        <div>
+          <div class="cert-title">Certificate of Compliance (EMC)</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Council EMC Directive 2014/30/EU</div>
+        </div>
+        <div class="cert-no">CERT NO: TST20221080078-2EC</div>
+      </div>
+
+      <table class="cert-table">
+        <tbody>
+          <tr><td class="lbl">Product Name</td><td>Emergency Light &amp; Power Inverter Kit</td></tr>
+          <tr><td class="lbl">Electrical Rating</td><td><strong>110-240V ~ 50/60Hz, 3-50W</strong></td></tr>
+          <tr><td class="lbl">Main Model</td><td><strong>HY-04C / LM1081</strong></td></tr>
+          <tr><td class="lbl">Harmonized Standards</td><td>
+            • EN IEC 55015:2019 + A11:2020 (Radio disturbance characteristics)<br>
+            • EN 61547:2009 (Equipment for general lighting - EMC immunity)<br>
+            • EN IEC 61000-3-2:2019 + A1:2021 (Harmonic current emissions)<br>
+            • EN 61000-3-3:2013 + A1:2019 + A2:2021 (Voltage fluctuations &amp; flicker)
+          </td></tr>
+          <tr><td class="lbl">Test Report No.</td><td><strong>TST20221080078-2ER</strong></td></tr>
+          <tr><td class="lbl">Issue Date</td><td>October 15, 2022</td></tr>
+        </tbody>
+      </table>
+
+      <div style="background:#f8fafc;border-left:3px solid var(--orange);padding:3mm 4mm;margin-top:3mm;font-size:11px;color:#4b5563;line-height:1.5;">
+        <strong>Conformity Statement:</strong> The EUT described above has been tested with listed harmonized standards and found in compliance with EMC Directive 2014/30/EU. It is certified for CE marking to demonstrate European Union market electromagnetic compatibility.
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:center;gap:12mm;margin-top:8mm;">
+      <div style="border:1.5px solid #2563eb;color:#2563eb;padding:4mm 8mm;border-radius:4px;font-weight:700;font-size:12px;text-align:center;letter-spacing:1px;">
+        CE EMC DIRECTIVE 2014/30/EU
+      </div>
+    </div>
+
+  </div>
+  <div class="scr-footer">
+    <div class="fl">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div>
+    </div>
+    <div class="fr">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 5 — CERTIFICATE OF COMPLIANCE: LVD DIRECTIVE -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header">
+      <img src="logo.png" alt="Short Circuit"/>
+      <span class="doc-ref">{{ product.modelNumber }} · COMPLIANCE CERTIFICATE</span>
+    </div>
+
+    <div class="sec-h1">5. Certificate of Compliance — Low Voltage Directive (LVD)</div>
+    <p class="body-p">The safety electrical construction, dielectric insulation, and thermal characteristics of the Emergency Power Kit have been fully verified under Council LVD Directive 2014/35/EU.</p>
+
+    <div class="cert-card">
+      <div class="cert-header">
+        <div>
+          <div class="cert-title">Certificate of Compliance (LVD)</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Council Low Voltage Directive 2014/35/EU</div>
+        </div>
+        <div class="cert-no">CERT NO: TST20221080078-1SC</div>
+      </div>
+
+      <table class="cert-table">
+        <tbody>
+          <tr><td class="lbl">Product Name</td><td>Emergency Light &amp; Power Inverter Kit</td></tr>
+          <tr><td class="lbl">Electrical Rating</td><td><strong>110-240V ~ 50/60Hz, 3-50W</strong></td></tr>
+          <tr><td class="lbl">Main Model</td><td><strong>HY-04C / LM1081</strong></td></tr>
+          <tr><td class="lbl">Harmonized Standards</td><td>
+            • EN IEC 60598-1:2021 (Luminaires - General requirements and tests)<br>
+            • EN IEC 60598-2-1:2021 (Fixed general purpose luminaires / emergency auxiliary)
+          </td></tr>
+          <tr><td class="lbl">Test Report No.</td><td><strong>TST20221080078-1SR</strong></td></tr>
+          <tr><td class="lbl">Issue Date</td><td>October 15, 2022</td></tr>
+        </tbody>
+      </table>
+
+      <div style="background:#f8fafc;border-left:3px solid var(--orange);padding:3mm 4mm;margin-top:3mm;font-size:11px;color:#4b5563;line-height:1.5;">
+        <strong>Conformity Statement:</strong> The EUT described above has been tested by accredited safety testing engineers and found in compliance with the Council LVD Directive 2014/35/EU. The product meets all European safety regulations for low-voltage power supply and emergency electrical components.
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:center;gap:12mm;margin-top:8mm;">
+      <div style="border:1.5px solid #16a34a;color:#16a34a;padding:4mm 8mm;border-radius:4px;font-weight:700;font-size:12px;text-align:center;letter-spacing:1px;">
+        CE LVD DIRECTIVE 2014/35/EU
+      </div>
+      <div style="border:1.5px solid #dc2626;color:#dc2626;padding:4mm 8mm;border-radius:4px;font-weight:700;font-size:12px;text-align:center;letter-spacing:1px;">
+        SAFETY TESTED EN 60598
+      </div>
+    </div>
+
+  </div>
+  <div class="scr-footer">
+    <div class="fl">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div>
+    </div>
+    <div class="fr">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div>
+    </div>
+  </div>
+</div>

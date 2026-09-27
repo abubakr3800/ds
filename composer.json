@@ -1,0 +1,9 @@
+{
+    "name": "short-circuit/datasheet-generator",
+    "description": "SC Datasheet Generator - PHP version",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "tecnickcom/tcpdf": "~6.11.0"
+    }
+}

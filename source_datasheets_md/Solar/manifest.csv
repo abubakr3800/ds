@@ -1,0 +1,3 @@
+source_folder,source_file,markdown_file,pages,images_extracted,text_chars,flagged_pages,vision_applied,error
+Solar,100 w Solar Street Light .pdf,100_w_Solar_Street_Light.md,2,0,687,,False,
+Solar,60w solar street datasheet.pdf,60w_solar_street_datasheet.md,2,0,836,,False,

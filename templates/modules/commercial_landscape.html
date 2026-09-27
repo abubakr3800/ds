@@ -1,0 +1,177 @@
+<!-- ══════════════════════════════════════════
+     COMMERCIAL & LANDSCAPE LIGHTING MODULE
+     2-Page Compact Layout: Applications, Benefits, Technical Data, Materials & Mounting
+══════════════════════════════════════════ -->
+
+<!-- PAGE 1 — HERO, APPLICATIONS & TECHNICAL DATA -->
+<div class="page">
+  <div class="page-main">
+    <div class="scr-header">
+      <img src="logo.png" alt="Short Circuit"/>
+      <span class="doc-ref">{{ product.modelNumber }} · PRODUCT DATASHEET</span>
+    </div>
+
+    <!-- Product Title & Intro -->
+    <div style="margin-bottom:4mm;">
+      <h1 class="page-title" style="margin-bottom:1mm;">{{ product.name }}</h1>
+      <div class="page-subtitle" style="margin-bottom:3mm;">Short Circuit Architectural &amp; Landscape Lighting Series</div>
+    </div>
+
+    <div style="display:flex;gap:8mm;align-items:flex-start;margin-bottom:5mm;">
+      <!-- Hero Image -->
+      <div style="flex:0 0 75mm;text-align:center;">
+        <div style="width:75mm;height:65mm;border:1px solid #e5e7eb;border-radius:6px;display:flex;align-items:center;justify-content:center;background:#fff;padding:3mm;">
+          {{#if product.heroImageUrl}}
+            <img src="{{ product.heroImageUrl }}" alt="{{ product.name }}" style="max-width:100%;max-height:100%;object-fit:contain;display:block;margin:0 auto;"/>
+          {{else}}
+            <span style="font-family:var(--font-body);color:var(--muted);font-size:11px;">No product photo</span>
+          {{/if}}
+        </div>
+      </div>
+
+      <!-- Applications & Benefits -->
+      <div style="flex:1;">
+        <div class="orange-label">AREAS OF APPLICATION</div>
+        <div class="badge-wrap" style="margin-bottom:3mm;">
+          {{#each landscapeApps}}
+          <span class="badge-tag">{{ this }}</span>
+          {{/each}}
+        </div>
+
+        <div class="orange-label" style="margin-top:2mm;">PRODUCT BENEFITS</div>
+        <ul class="bullet-list" style="margin-bottom:2mm;">
+          {{#each landscapeBenefits}}
+          <li>{{ this }}</li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Technical Data Grid -->
+    <div class="two-col" style="gap:6mm;">
+      <!-- Electrical Data -->
+      <div>
+        <div class="sec-h2" style="margin-top:0;">ELECTRICAL DATA</div>
+        <table>
+          <tbody>
+            <tr><td class="lbl">Driver</td><td>{{ electricalSpecs.driver }}</td></tr>
+            <tr><td class="lbl">Nominal Wattage</td><td>{{ electricalSpecs.wattage }}</td></tr>
+            <tr><td class="lbl">Nominal Voltage</td><td>{{ electricalSpecs.voltage }}</td></tr>
+            <tr><td class="lbl">Main Frequency</td><td>{{ electricalSpecs.frequency }}</td></tr>
+            <tr><td class="lbl">Power Factor</td><td>{{ electricalSpecs.pf }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Photometric Data -->
+      <div>
+        <div class="sec-h2" style="margin-top:0;">PHOTOMETRIC DATA</div>
+        <table>
+          <tbody>
+            <tr><td class="lbl">LED Chip</td><td>{{ photometricSpecs.chip }}</td></tr>
+            <tr><td class="lbl">LED Efficacy</td><td>{{ photometricSpecs.efficacy }}</td></tr>
+            <tr><td class="lbl">Total Luminous Flux</td><td>{{ photometricSpecs.luminousFlux }}</td></tr>
+            <tr><td class="lbl">Color Temperature</td><td>{{ photometricSpecs.cct }}</td></tr>
+            <tr><td class="lbl">Color Rendering (CRI)</td><td>{{ photometricSpecs.cri }}</td></tr>
+            <tr><td class="lbl">Beam Angle</td><td>{{ photometricSpecs.beamAngle }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  <div class="scr-footer">
+    <div class="fl">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div>
+    </div>
+    <div class="fr">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2 — COLORS, MATERIALS, LIFESPAN, PROTECTION & MOUNTING -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header">
+      <img src="logo.png" alt="Short Circuit"/>
+      <span class="doc-ref">{{ product.modelNumber }} · PRODUCT DATASHEET</span>
+    </div>
+
+    <div class="sec-h1" style="margin-top:0;">Mechanical &amp; Environmental Characteristics</div>
+
+    <div class="two-col" style="gap:8mm;margin-bottom:6mm;">
+      <!-- Colors & Materials -->
+      <div>
+        <div class="sec-h2" style="margin-top:0;">COLORS &amp; MATERIALS</div>
+        <table>
+          <tbody>
+            <tr><td class="lbl">Body Material</td><td>{{ mechanicalSpecs.bodyMaterial }}</td></tr>
+            <tr><td class="lbl">Body Color</td><td>{{ mechanicalSpecs.bodyColor }}</td></tr>
+            <tr><td class="lbl">Diffuser Material</td><td>{{ mechanicalSpecs.diffuserMaterial }}</td></tr>
+            <tr><td class="lbl">Housing Finish</td><td>Electrostatic powder coating</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sec-h2" style="margin-top:4mm;">LIFESPAN &amp; WARRANTY</div>
+        <table>
+          <tbody>
+            <tr><td class="lbl">Operational Lifetime</td><td>{{ lifespanSpecs.lifetime }}</td></tr>
+            <tr><td class="lbl">Standard Warranty</td><td>{{ lifespanSpecs.warranty }}</td></tr>
+            <tr><td class="lbl">Lumen Maintenance</td><td>L70B50 &gt; 50,000h</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Protection & Mounting -->
+      <div>
+        <div class="sec-h2" style="margin-top:0;">PROTECTION &amp; SAFETY</div>
+        <table>
+          <tbody>
+            <tr><td class="lbl">Ingress Protection (IP)</td><td><strong>{{ protectionSpecs.ipRating }}</strong></td></tr>
+            <tr><td class="lbl">Impact Resistance (IK)</td><td>{{ protectionSpecs.ikRating }}</td></tr>
+            <tr><td class="lbl">Electrical Protection Class</td><td>Class I</td></tr>
+            <tr><td class="lbl">Operating Temperature</td><td>-20°C ~ +50°C</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sec-h2" style="margin-top:4mm;">MOUNTING &amp; INSTALLATION</div>
+        <table>
+          <tbody>
+            <tr><td class="lbl">Mounting Type</td><td>{{ mountingSpecs.mountingType }}</td></tr>
+            <tr><td class="lbl">Mounting Location</td><td>{{ mountingSpecs.mountingLocation }}</td></tr>
+            <tr><td class="lbl">Adjustability</td><td>{{ mountingSpecs.adjustability }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Product Features or Secondary Diagram if Available -->
+    <div style="background:#fafafa;border:1px solid #e5e7eb;border-radius:6px;padding:5mm 6mm;margin-bottom:5mm;">
+      <div class="orange-label" style="margin-bottom:2mm;">SPECIFICATION NOTES &amp; COMPLIANCE</div>
+      <p class="body-p" style="margin-bottom:2mm;">All technical parameters provided in this document are measured under standard laboratory conditions (Ta = 25°C). Values of luminous flux and electrical power tolerance are within ±7%. Photometric data is verified in accordance with IESNA LM-79 and CIE testing recommendations.</p>
+      <p class="body-p" style="margin-bottom:0;">Other color temperatures (3000K, 4000K, 6000K), housing finishes (Grey, Black, White, Custom RAL), and dimming options (1-10V, DALI) are available upon project request.</p>
+    </div>
+
+    <!-- Compliance Badges -->
+    <div class="cert-row" style="justify-content:center;gap:12mm;margin-top:4mm;">
+      <div class="cert-item"><span class="cert-fallback" style="display:block;">CE COMPLIANT</span></div>
+      <div class="cert-item"><span class="cert-fallback" style="display:block;">RoHS 2.0</span></div>
+      <div class="cert-item"><span class="cert-fallback" style="display:block;">ISO 9001</span></div>
+      <div class="cert-item"><span class="cert-fallback" style="display:block;">IP{{ protectionSpecs.ipRatingRaw }} RATED</span></div>
+    </div>
+
+  </div>
+  <div class="scr-footer">
+    <div class="fl">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div>
+    </div>
+    <div class="fr">
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div>
+      <div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div>
+    </div>
+  </div>
+</div>

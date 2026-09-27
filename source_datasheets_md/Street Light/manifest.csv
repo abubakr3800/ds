@@ -1,0 +1,10 @@
+source_folder,source_file,markdown_file,pages,images_extracted,text_chars,flagged_pages,vision_applied,error
+Street Light,SC 100 W Street Light Datasheet -6Kv.pdf,SC_100_W_Street_Light_Datasheet_-6Kv.md,12,0,11499,,False,
+Street Light,SC 100 W Street Light Datasheet...pdf,SC_100_W_Street_Light_Datasheet.md,12,0,11489,,False,
+Street Light,SC 100 W Street Light Datasheet.pdf,SC_100_W_Street_Light_Datasheet_2.md,12,0,11485,,False,
+Street Light,SC 120 W Street Light Datasheet.pdf,SC_120_W_Street_Light_Datasheet.md,12,0,11491,,False,
+Street Light,SC 150 W Street Light Datasheet--.pdf,SC_150_W_Street_Light_Datasheet--.md,12,0,11485,,False,
+Street Light,SC 150 W Street Light Datasheet.pdf,SC_150_W_Street_Light_Datasheet.md,12,0,11485,,False,
+Street Light,SC 200 W Street Light Datasheet 3Y.pdf,SC_200_W_Street_Light_Datasheet_3Y.md,12,0,11497,,False,
+Street Light,SC 200 W Street Light Datasheet.pdf,SC_200_W_Street_Light_Datasheet.md,12,0,11485,,False,
+Street Light,SC 80 W Street Light Datasheet.pdf,SC_80_W_Street_Light_Datasheet.md,12,0,11485,,False,

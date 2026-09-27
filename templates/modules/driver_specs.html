@@ -1,0 +1,350 @@
+<!-- ══════════════════════════════════════════
+     PAGE 8 — §3.4.3 POLAR CURVE + §4 DRIVER INTRO
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="sec-h3">3.4.3 Polar Curve</div>
+    <!--
+      Figure5 — Goniophotometer Polar Curve
+      Data source: chip.beamAngleDeg  (number, e.g. 120)
+      The half-angle = beamAngleDeg / 2.
+      SVG origin (apex): cx=250, cy=280, radius=200px.
+      For angle θ from -90° to +90°, the beam intensity at that angle is
+      modelled as cos^n(θ) where n = ln(0.5) / ln(cos(halfAngle)).
+      The beam outline is traced as a polar path; scale = 200px at 0°.
+        svgX = 250 + intensity * 200 * sin(θ)
+        svgY = 280 - intensity * 200 * cos(θ)
+      Fallback static path drawn for 120° beam (half-angle = 60°).
+    -->
+    <div class="chart-wrap">
+      <svg id="chart-fig5" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"
+           style="max-width:115mm;border:1px solid #ddd;border-radius:6px;padding:4px;background:#fff;"
+           data-beam-angle="120">
+        <!-- concentric reference arcs (25%, 50%, 75%, 100%) -->
+        <g stroke="#ddd" stroke-width="0.8" fill="none">
+          <path d="M150,280 A100,100 0 1,1 350,280"/>
+          <path d="M100,280 A150,150 0 1,1 400,280"/>
+          <path d="M 50,280 A200,200 0 1,1 450,280"/>
+        </g>
+        <!-- radial guide lines every 15° from -90° to +90° -->
+        <g stroke="#ddd" stroke-width="0.8">
+          <!-- 0° vertical -->
+          <line x1="250" y1="280" x2="250" y2="80"/>
+          <!-- ±15° -->
+          <line x1="250" y1="280" x2="302" y2="86"/>
+          <line x1="250" y1="280" x2="198" y2="86"/>
+          <!-- ±30° -->
+          <line x1="250" y1="280" x2="350" y2="107"/>
+          <line x1="250" y1="280" x2="150" y2="107"/>
+          <!-- ±45° -->
+          <line x1="250" y1="280" x2="391" y2="138"/>
+          <line x1="250" y1="280" x2="109" y2="138"/>
+          <!-- ±60° -->
+          <line x1="250" y1="280" x2="423" y2="180"/>
+          <line x1="250" y1="280" x2="77"  y2="180"/>
+          <!-- ±75° -->
+          <line x1="250" y1="280" x2="443" y2="228"/>
+          <line x1="250" y1="280" x2="57"  y2="228"/>
+          <!-- ±90° horizontal -->
+          <line x1="50"  y1="280" x2="450" y2="280"/>
+        </g>
+        <!-- angle labels -->
+        <g font-family="sans-serif" font-size="11" fill="#444" text-anchor="middle">
+          <text x="250" y="70">0°</text>
+          <text x="310" y="80">15°</text>  <text x="190" y="80">15°</text>
+          <text x="360" y="100">30°</text> <text x="140" y="100">30°</text>
+          <text x="400" y="132">45°</text> <text x="100" y="132">45°</text>
+          <text x="436" y="178">60°</text> <text x="64"  y="178">60°</text>
+          <text x="455" y="225">75°</text> <text x="46"  y="225">75°</text>
+          <text x="462" y="292">90°</text> <text x="36"  y="292">90°</text>
+        </g>
+        <!-- % intensity labels along bottom axis -->
+        <g font-family="sans-serif" font-size="10" fill="#666" text-anchor="middle">
+          <text x="350" y="295">25%</text>
+          <text x="400" y="295">50%</text>
+          <text x="450" y="295">75%</text>
+          <text x="250" y="295">0%</text>
+        </g>
+        <!-- axes -->
+        <line x1="50"  y1="280" x2="450" y2="280" stroke="#555" stroke-width="1.5"/>
+        <line x1="250" y1="280" x2="250" y2="70"  stroke="#555" stroke-width="1.5"/>
+        <!--
+          BEAM CURVE — drawn by JS at runtime from chip.beamAngleDeg.
+          JS computes cos^n distribution, traces polar path.
+          Static fallback: 120° beam (half-angle 60°), n≈1.
+          Points computed: for θ = -90..+90 in 5° steps,
+            intensity = max(0, cos(θ))^1  (lambertian approx for 120° beam)
+            px = 250 + intensity*200*sin(θ)
+            py = 280 - intensity*200*cos(θ)
+        -->
+        <path id="fig5-beam"
+          data-beam-angle="120"
+          d="M250,280
+            L233,282 L216,289 L201,301 L189,317 L180,336 L175,356
+            L176,374 L184,388 L197,394 L214,392 L231,382 L247,366
+            L250,358
+            L253,366 L269,382 L286,392 L303,394 L316,388 L324,374
+            L325,356 L320,336 L311,317 L299,301 L284,289 L267,282 Z"
+          fill="rgba(30,60,200,0.10)" stroke="#2244cc" stroke-width="2.2"/>
+      </svg>
+      <div class="fig-caption">Figure5: Chip Polar Curve</div>
+    </div>
+
+    <div class="sec-h1" style="margin-top:4mm;">4. Driver</div>
+
+    <table style="width:auto;margin-bottom:4mm;">
+      <tbody>
+        <tr>
+          <td class="lbl" style="border:1px solid #000;padding:6px 14px;">Model number</td>
+          <td style="border:1px solid #000;padding:6px 20px;font-weight:700;">SC-LDF-35V1450mA</td>
+        </tr>
+        <tr>
+          <td class="lbl" style="border:1px solid #000;padding:6px 14px;">Type</td>
+          <td style="border:1px solid #000;padding:6px 20px;font-weight:700;">Universal isolated LED driver</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Layout matching Screenshot 2: Centered Figure 6 Short Circuit Driver -->
+    {{#if product.driverImageUrl}}
+    <div style="text-align:center;margin:4mm 0;">
+      <img src="{{ product.driverImageUrl }}" alt="Short Circuit Driver" style="max-width:85mm;max-height:48mm;object-fit:contain;display:inline-block;margin:0 auto;"/>
+      <div class="fig-caption" style="font-weight:700;font-size:11px;margin-top:2mm;">Figure6: Short Circuit Driver</div>
+    </div>
+    {{/if}}
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 9 — §4.1 DESCRIPTION + §4.2 FEATURES + §4.3 PROTECTIONS
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="two-col">
+      <div>
+        <div class="sec-h2">4.1 General Description</div>
+        <!-- FIXED: SC LDF driver description -->
+        <p class="body-p">LDF series is an offline LED lighting controller with high power factor, low THD and high constant current (CC) precision. It can achieve low system cost for an isolated lighting application by primary side control in a single stage converter. It significantly simplifies the LED lighting system design by eliminating the secondary side feedback components and the opto-coupler.</p>
+        <p class="body-p">The proprietary CC control is used, and the system can achieve high power factor with constant on-time control. Quasi-resonant (QR) operation and clamping frequency improve the system efficiency.</p>
+        <p class="body-p">The advanced start-up technology is used to meet the start-up time requirement (&lt;0.5s). The constant output current is compensated for tolerance of transformer inductance variation. Besides, the line compensation and load compensation are built in for high precisely constant output current control.</p>
+        <p class="body-p">This series offers comprehensive protection coverage with auto-recovery features including programmable VIN foldback, programmable VIN OVP, programmable thermal foldback, LED open loop protection, LED short circuit protection, cycle-by-cycle current limiting, built-in leading-edge blanking, VDD under voltage lockout (UVLO).</p>
+      </div>
+
+      <div>
+        <div class="sec-h2">4.2 Features</div>
+        <ul class="check-list">
+          <!-- FIXED: SC LDF driver features -->
+          <li>Primary-side control with single stage PFC LED driver for low system cost,</li>
+          <li>High PF (&gt;0.95),</li>
+          <li>Low THD (&lt;10%),</li>
+          <li>High efficiency (&gt;85%),</li>
+          <li>Life time up to 50,000 hours</li>
+          <li>Pre-programmed VIN foldback,</li>
+          <li>Pre-programmed VIN OVP,</li>
+          <li>Pre-programmed thermal foldback,</li>
+          <li>Pre-programmed CC regulation,</li>
+          <li>High precision constant current,</li>
+          <li>Fast start-up time (&lt;0.5s),</li>
+          <li>Built-in line/load compensation,</li>
+          <li>No visible flicker, and audible noise free</li>
+        </ul>
+
+        <div class="sec-h2">4.3 Protection</div>
+        <ul class="check-list">
+          <!-- FIXED: SC LDF driver protections -->
+          <li>LED short circuit protection,</li>
+          <li>LED open circuit protection,</li>
+          <li>VDD over/under voltage protection,</li>
+          <li>Lightning surge voltage up to 10 kV,</li>
+          <li>AC input overvoltage protection,</li>
+          <li>AC input overcurrent protection.</li>
+        </ul>
+<p class="body-p">The LED driver recovers automatically and back to normal operation after all fault causes are removed.</p>
+      </div>
+    </div>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 10 — §4.4 MODULE SPEC: AC INPUT + DC OUTPUT
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="sec-h2">4.4 Module Specification</div>
+    <p class="body-p">This section presents the specification of the LED driver, normal operating range, and the driver performance.</p>
+
+    <div class="sec-h3">4.4.1 AC Input Specification</div>
+    <p class="tbl-caption">Table6: AC input specification</p>
+    <table>
+      <tbody>
+        <!-- FIXED: SC LDF AC input specs -->
+        <tr><td class="lbl">LED driver max. apparent power</td><td>56W at full load 95Vac&lt;Vin&lt;275Vac</td></tr>
+        <tr><td class="lbl">AC input voltage rating</td><td>30Vac ~ 300Vac</td></tr>
+        <tr><td class="lbl">AC input voltage range for normal operation</td><td>90Vac ~ 275Vac</td></tr>
+        <tr><td class="lbl">AC input voltage range for foldback operation</td><td>30Vac ~ 90Vac</td></tr>
+        <tr><td class="lbl">AC input frequency range</td><td>47Hz ~ 63Hz</td></tr>
+        <tr><td class="lbl">Power factor</td><td>&gt;0.95 at 220Vac full load</td></tr>
+        <tr><td class="lbl">AC input current THD</td><td>&lt;10% at 220Vac full load</td></tr>
+        <tr><td class="lbl">AC max. input current</td><td>&lt;0.8A at 95Vac full load</td></tr>
+        <tr><td class="lbl">Efficiency</td><td>&gt;85% at 220Vac full load</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sec-h3">4.4.2 DC Output Characteristics</div>
+    <p class="tbl-caption">Table7: DC output characteristics</p>
+    <table>
+      <tbody>
+        <!-- FIXED: SC LDF DC output specs -->
+        <tr><td class="lbl">DC output voltage</td><td>20 ~ 35 Vdc</td></tr>
+        <tr><td class="lbl">Output voltage ripples</td><td>&lt;2.5 V peak-peak at max. load</td></tr>
+        <tr><td class="lbl">DC output constant-current</td><td>1450 mA, ±5%</td></tr>
+        <tr><td class="lbl">Output current ripples</td><td>&lt;45%</td></tr>
+        <tr><td class="lbl">Maximum output power</td><td>50 W</td></tr>
+        <tr><td class="lbl">Line regulation</td><td>±5%</td></tr>
+        <tr><td class="lbl">Load regulation</td><td>±5%</td></tr>
+        <tr><td class="lbl">Start-up time</td><td>&lt; 600 ms at 220Vac full load</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 11 — §4.4.3 PROTECTION SPECS + §4.4.4 MECHANICAL DRAWING
+══════════════════════════════════════════ -->
+<div class="page page-break">
+  <div class="page-main">
+    <div class="scr-header"><img src="logo.png" alt="Short Circuit"/><span class="doc-ref">{{ product.modelNumber }} · DATASHEET</span></div>
+
+    <div class="sec-h3">4.4.3 Protection Specifications</div>
+    <p class="tbl-caption">Table8: Protection specifications</p>
+    <table>
+      <tbody>
+        <!-- FIXED: SC LDF protection thresholds -->
+        <tr><td class="lbl">AC input overvoltage</td><td>275Vac ~ 300Vac</td></tr>
+        <tr><td class="lbl">AC input foldback voltage</td><td>85Vac ~ 95Vac</td></tr>
+        <tr><td class="lbl">DC output open circuit overvoltage</td><td>41 ~ 45 Vdc</td></tr>
+        <tr><td class="lbl">Thermal foldback temperature</td><td>100℃</td></tr>
+        <tr><td class="lbl">Lightning surge</td><td>Up to 10 kV</td></tr>
+        <tr><td class="lbl">Controller IC VDD undervoltage protection</td><td>9 Vdc</td></tr>
+        <tr><td class="lbl">Controller IC VDD overvoltage protection</td><td>24 Vdc</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sec-h3">4.4.4 Mechanical Specification</div>
+    <!--
+      MECHANICAL DRAWING — the SVG below uses driver.mechDims values
+      for the annotation text labels. The proportional drawing geometry
+      is fixed (standard rectangular driver case shape). Only the labels change.
+    -->
+    <div class="dim-box" style="border:1.5px solid #222;padding:12px;background:#fff;margin:4mm 0 2mm 0;">
+      {{#if product.driverBodyImageUrl}}
+        <div style="min-height:50mm;display:flex;align-items:center;justify-content:center;">
+          <img src="{{ product.driverBodyImageUrl }}" alt="Driver mechanical dimensions" style="max-width:100%;max-height:85mm;object-fit:contain;display:block;margin:0 auto;"/>
+        </div>
+      {{else}}
+      <!-- MECHANICAL DRAWING — redrawn to match reference exactly -->
+      <svg viewBox="0 0 620 430" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+
+        <!-- ══ TOP VIEW (connector/flange view) ══ -->
+        <!-- main outer rectangle -->
+        <rect x="70" y="25" width="430" height="105" fill="white" stroke="#333" stroke-width="2"/>
+        <!-- inner shaded rectangle (PCB area) -->
+        <rect x="100" y="25" width="370" height="90" fill="#eeeeee" stroke="#555" stroke-width="1.5"/>
+        <!-- LEFT round bump (cable gland) -->
+        <ellipse cx="55" cy="72" rx="18" ry="28" fill="white" stroke="#333" stroke-width="1.8"/>
+        <!-- RIGHT round bump -->
+        <ellipse cx="515" cy="72" rx="18" ry="28" fill="white" stroke="#333" stroke-width="1.8"/>
+        <!-- top connector raised box -->
+        <rect x="190" y="10" width="190" height="25" fill="white" stroke="#333" stroke-width="1.5"/>
+
+        <!-- ══ BOTTOM VIEW (case body front) ══ -->
+        <!-- outer case box -->
+        <rect x="70" y="240" width="430" height="100" fill="white" stroke="#555" stroke-width="2"/>
+        <!-- inner dashed PCB rectangle -->
+        <rect x="95" y="258" width="380" height="64" fill="none" stroke="#888" stroke-width="1.2" stroke-dasharray="6,4"/>
+
+        <!-- ══ DIMENSION ANNOTATIONS ══ -->
+
+        <!-- 97.1mm — outer width, below top view -->
+        <line x1="70"  y1="152" x2="500" y2="152" stroke="#333" stroke-width="1.2"/>
+        <line x1="70"  y1="146" x2="70"  y2="158" stroke="#333" stroke-width="1.2"/>
+        <line x1="500" y1="146" x2="500" y2="158" stroke="#333" stroke-width="1.2"/>
+        <polygon points="74,149 86,152 74,155" fill="#333"/>
+        <polygon points="496,149 484,152 496,155" fill="#333"/>
+        <text x="285" y="148" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#333">97.1mm</text>
+
+        <!-- 91.4mm — case span -->
+        <line x1="100" y1="168" x2="470" y2="168" stroke="#333" stroke-width="1.2"/>
+        <line x1="100" y1="162" x2="100" y2="174" stroke="#333" stroke-width="1.2"/>
+        <line x1="470" y1="162" x2="470" y2="174" stroke="#333" stroke-width="1.2"/>
+        <polygon points="104,165 116,168 104,171" fill="#333"/>
+        <polygon points="466,165 454,168 466,171" fill="#333"/>
+        <text x="285" y="164" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#333">91.4mm</text>
+
+        <!-- 83.9mm — above bottom view -->
+        <line x1="100" y1="228" x2="470" y2="228" stroke="#333" stroke-width="1.2"/>
+        <line x1="100" y1="222" x2="100" y2="234" stroke="#333" stroke-width="1.2"/>
+        <line x1="470" y1="222" x2="470" y2="234" stroke="#333" stroke-width="1.2"/>
+        <polygon points="104,225 116,228 104,231" fill="#333"/>
+        <polygon points="466,225 454,228 466,231" fill="#333"/>
+        <text x="285" y="224" font-family="sans-serif" font-size="12" text-anchor="middle" fill="#333">83.9mm</text>
+
+        <!-- 80mm — dashed, above 83.9mm -->
+        <line x1="120" y1="214" x2="450" y2="214" stroke="#777" stroke-width="1" stroke-dasharray="5,4"/>
+        <line x1="120" y1="209" x2="120" y2="219" stroke="#777" stroke-width="1"/>
+        <line x1="450" y1="209" x2="450" y2="219" stroke="#777" stroke-width="1"/>
+        <text x="285" y="210" font-family="sans-serif" font-size="11" text-anchor="middle" fill="#666">80mm</text>
+
+        <!-- 33mm — right side height of bottom view -->
+        <line x1="565" y1="240" x2="565" y2="340" stroke="#333" stroke-width="1.2"/>
+        <line x1="559" y1="240" x2="571" y2="240" stroke="#333" stroke-width="1.2"/>
+        <line x1="559" y1="340" x2="571" y2="340" stroke="#333" stroke-width="1.2"/>
+        <polygon points="562,244 565,256 568,244" fill="#333"/>
+        <polygon points="562,336 565,324 568,336" fill="#333"/>
+        <text x="590" y="295" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#333" transform="rotate(90,590,295)">33mm</text>
+
+        <!-- 22mm — right side height of top view -->
+        <line x1="565" y1="25"  x2="565" y2="130" stroke="#333" stroke-width="1.2"/>
+        <line x1="559" y1="25"  x2="571" y2="25"  stroke="#333" stroke-width="1.2"/>
+        <line x1="559" y1="130" x2="571" y2="130" stroke="#333" stroke-width="1.2"/>
+        <polygon points="562,29 565,41 568,29" fill="#333"/>
+        <polygon points="562,126 565,114 568,126" fill="#333"/>
+        <text x="590" y="82" font-family="sans-serif" font-size="13" text-anchor="middle" fill="#333" transform="rotate(90,590,82)">22mm</text>
+
+      </svg>
+      {{/if}}
+      <div class="fig-caption" style="font-weight:700;font-size:11px;padding-top:6px;border-top:1px solid #222;margin-top:6px;text-align:center;">Figure 7: Driver mechanical dimensions in water-proof case IP65</div>
+    </div>
+  </div>
+  <div class="scr-footer"><div class="fl"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{ footer.address }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>{{ footer.phone }}</div></div><div class="fr"><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>{{ footer.email }}</div><div class="frow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>{{ footer.website }}</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     RUNTIME CHART RENDERER
+     Reads data-* attributes from each polyline
+     and repaints them from the template data
+     arrays injected as JSON into data-points.
+══════════════════════════════════════════ -->
+<script>
+/*
+  How to use with your template engine:
+  After Handlebars renders the HTML, call window.SC_CHART_DATA = { ... }
+  with the chip curve arrays before this script runs, OR inject them
+  directly as a JSON data attribute on a <script id="sc-chart-data"> tag.
+
+  Expected format:
+    window.SC_CHART_DATA = {
+      lightOutputCurve: [{x:0,y:1.05},{x:20,y:1.02}, ...],
+      relOutputCurve:   [{x:0,y:0},{x:50,y:0.5}, ...],
+      ivCurve:          [{x:5.4,y:5},{x:5.6,y:20}, ...]
+    };
+*/
