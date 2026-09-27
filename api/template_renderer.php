@@ -211,12 +211,26 @@ function renderDatasheetTemplate($fixture, $variant, $forPdf = false) {
     $driverUrl = $resolveImage('driver', 'template/driver.png');
     $driverBodyUrl = $resolveImage('driver_body', 'template/driver_body.png');
 
+    // Web base URL
+    $cleanScriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
+    $baseDirUrl = rtrim(str_replace('\\', '/', dirname($cleanScriptName)), '/');
+    if ($baseDirUrl === '.' || $baseDirUrl === '/' || $baseDirUrl === '') {
+        $baseDirUrl = defined('WEB_BASE_URL') ? WEB_BASE_URL : '';
+    }
+
     // Logo & Watermark
     $logoFile = BASE_DIR . '/assets/images/logo.svg';
     $logoDataUri = imageToDataUri($logoFile);
-    $logoSrc = $logoDataUri ?: '/assets/images/logo.svg';
+    $logoSrc = $logoDataUri ?: ($baseDirUrl . '/assets/images/logo.svg');
 
-    $baseHtml = str_replace('__FONTS_BASE__', '', $baseHtml);
+    // Font base
+    if ($forPdf) {
+        $fontsBase = 'file:///' . str_replace('\\', '/', BASE_DIR);
+    } else {
+        $fontsBase = $baseDirUrl;
+    }
+
+    $baseHtml = str_replace('__FONTS_BASE__', $fontsBase, $baseHtml);
     $baseHtml = str_replace('__LOGO_URL__', $logoDataUri ?: '', $baseHtml);
     $baseHtml = str_replace('src="logo.png"', 'src="' . $logoSrc . '"', $baseHtml);
 

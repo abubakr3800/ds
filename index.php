@@ -3,6 +3,7 @@
  * SC Datasheet Generator — Main Root Entry Point
  *
  * Routes all requests through this single entry file at the project root.
+ * Supports both root domain deployment (/) and subdirectory deployment (/ds/, /sub/path/, etc.).
  * Serves frontend HTML, static assets, images, and API endpoints.
  */
 
@@ -22,18 +23,37 @@ if (file_exists(BASE_DIR . '/vendor/autoload.php')) {
     require_once BASE_DIR . '/vendor/autoload.php';
 }
 
+// Determine web base directory if hosted in a subdirectory (e.g., /ds or /sub/folder)
+$cleanScriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
+$baseDirUrl = rtrim(str_replace('\\', '/', dirname($cleanScriptName)), '/');
+if ($baseDirUrl === '.' || $baseDirUrl === '/' || $baseDirUrl === '') {
+    $baseDirUrl = '';
+}
+if (!defined('WEB_BASE_URL')) {
+    define('WEB_BASE_URL', $baseDirUrl);
+}
+
 // Simple router
 $request_uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 $request_method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
-// Normalize path
-$path = rtrim($request_uri, '/');
+// Strip base directory prefix if present
+$path = $request_uri;
+if ($baseDirUrl !== '' && strpos($path, $baseDirUrl) === 0) {
+    $path = substr($path, strlen($baseDirUrl));
+}
+
+// Normalize path (ensure leading slash, strip trailing slash except root)
+$path = '/' . ltrim(rtrim($path, '/'), '/');
+if ($path === '//') {
+    $path = '/';
+}
 
 // Route handling
 if ($path === '' || $path === '/' || $path === '/index.php') {
     // Serve the main HTML page
     serveHTML();
-} elseif (strpos($path, '/api/') === 0) {
+} elseif ($path === '/api' || strpos($path, '/api/') === 0) {
     // API routes
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
@@ -93,13 +113,23 @@ function handleAPI($path, $method) {
 }
 
 /**
- * Serve static files with appropriate MIME types and urldecode handling
+ * Serve static files with appropriate MIME types and path validation
  */
 function serveFile($filepath) {
     if (!file_exists($filepath)) {
         http_response_code(404);
         header('Content-Type: text/html; charset=utf-8');
         echo '<h1>404 Not Found</h1><p>File not found: ' . htmlspecialchars(basename($filepath)) . '</p>';
+        return;
+    }
+
+    // Security check: ensure path is within BASE_DIR
+    $realBase = realpath(BASE_DIR);
+    $realFile = realpath($filepath);
+    if ($realFile === false || strpos($realFile, $realBase) !== 0) {
+        http_response_code(403);
+        header('Content-Type: text/html; charset=utf-8');
+        echo '<h1>403 Forbidden</h1>';
         return;
     }
 

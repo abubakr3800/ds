@@ -813,7 +813,7 @@ table.dtable th {
 <!-- Header -->
 <div class="header">
   <div class="header-left">
-    <img class="logo" id="logoImg" src="/assets/images/logo.svg" alt="Short Circuit Company" style="height: 40px; width: auto;">
+    <img class="logo" id="logoImg" src="assets/images/logo.svg" alt="Short Circuit Company" style="height: 40px; width: auto;">
     <h1 class="header-title">Datasheet Generator</h1>
   </div>
   <div class="header-right">
@@ -898,7 +898,16 @@ table.dtable th {
 </div>
 
 <script>
-const API_BASE = '/api';
+// Detect base URL dynamically (e.g. '' when served at domain root, or '/ds' when in a subdirectory)
+const BASE_URL = window.location.pathname.replace(/\/index\.php$/i, '').replace(/\/$/, '');
+const API_BASE = BASE_URL + '/api';
+
+// Ensure logo points to correct subdirectory
+const logoImg = document.getElementById('logoImg');
+if (logoImg) {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || localStorage.getItem('theme') || 'light';
+  logoImg.src = BASE_URL + (currentTheme === 'dark' ? '/assets/images/logo-bg-dark.svg' : '/assets/images/logo.svg');
+}
 let DATA = null;
 let DATA_BY_ID = {};
 let selectedFixture = null;
@@ -945,7 +954,7 @@ async function loadFixtures(category) {
 
 // Load from JSON file (fallback if API fails)
 async function loadFromJSON() {
-  const r = await fetch('/data/fixtures_app_data.json');
+  const r = await fetch(BASE_URL + '/data/fixtures_app_data.json');
   if (!r.ok) throw new Error(`JSON: HTTP ${r.status}`);
   const json = await r.json();
   const fixtures = json.fixtures.map((f, idx) => ({
@@ -994,7 +1003,7 @@ function renderCards(fixtures) {
   grid.innerHTML = fixtures.map(f => {
     const v0 = f.v && f.v[0] ? f.v[0] : null;
     const heroRel = f.hero_image || (v0 && v0.images && v0.images.hero ? v0.images.hero : null);
-    const heroUrl = heroRel ? '/images/' + encodeURI(heroRel) : null;
+    const heroUrl = heroRel ? (BASE_URL + '/images/' + encodeURI(heroRel)) : null;
 
     return `
     <div class="card" data-fixture-id="${f.id}">
@@ -1112,7 +1121,7 @@ window.openPreview = function(fixtureId) {
   const previewImg = document.getElementById('previewImage');
   const previewImgWrap = document.getElementById('previewImageWrap');
   if (heroRel && previewImg && previewImgWrap) {
-    previewImg.src = '/images/' + encodeURI(heroRel);
+    previewImg.src = BASE_URL + '/images/' + encodeURI(heroRel);
     previewImg.alt = selectedFixture.name;
     previewImgWrap.style.display = 'flex';
   } else if (previewImgWrap) {
@@ -1250,10 +1259,12 @@ themeToggle.addEventListener('click', () => {
   themeToggle.textContent = next === 'dark' ? '☀️ Light' : '🌙 Dark';
 
   const logoImg = document.getElementById('logoImg');
-  if (next === 'dark') {
-    logoImg.src = '/assets/images/logo-bg-dark.svg';
-  } else {
-    logoImg.src = '/assets/images/logo.svg';
+  if (logoImg) {
+    if (next === 'dark') {
+      logoImg.src = BASE_URL + '/assets/images/logo-bg-dark.svg';
+    } else {
+      logoImg.src = BASE_URL + '/assets/images/logo.svg';
+    }
   }
 });
 
@@ -1310,7 +1321,8 @@ const saved = localStorage.getItem('theme') || 'light';
 document.documentElement.setAttribute('data-theme', saved);
 themeToggle.textContent = saved === 'dark' ? '☀️ Light' : '🌙 Dark';
 if (saved === 'dark') {
-  document.getElementById('logoImg').src = '/assets/images/logo-bg-dark.svg';
+  const logo = document.getElementById('logoImg');
+  if (logo) logo.src = BASE_URL + '/assets/images/logo-bg-dark.svg';
 }
 </script>
 

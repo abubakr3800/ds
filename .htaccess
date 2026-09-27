@@ -1,3 +1,7 @@
+# Directory Index and Options
+DirectoryIndex index.php
+Options -Indexes
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
@@ -8,16 +12,24 @@
 </IfModule>
 
 # Deny access to sensitive files
-<FilesMatch "^\.">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
-
-# Prevent access to source markdown and scripts
-<FilesMatch "\.(md|bat|sh|py)$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
+<IfModule mod_authz_core.c>
+    <FilesMatch "^\.">
+        Require all denied
+    </FilesMatch>
+    <FilesMatch "\.(md|bat|sh|py|lock)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    <FilesMatch "^\.">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+    <FilesMatch "\.(md|bat|sh|py|lock)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>
 
 # Enable CORS headers
 <IfModule mod_headers.c>
