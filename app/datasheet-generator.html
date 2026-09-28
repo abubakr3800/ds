@@ -1188,22 +1188,16 @@ window.downloadPDF = async function(fxId, vId) {
 
     const pdfEngine = r.headers.get('X-PDF-Engine') || '';
     if (pdfEngine === 'tcpdf-fallback') {
-      const wantPrint = confirm(
-        'Notice: Headless Chrome is not installed on the server host to compile the modern modular PDF directly.\n\n' +
-        'Click OK to open the high-resolution modular print view (choose "Save as PDF" in your print dialog) for the exact design.\n' +
-        'Or click Cancel to download the basic server fallback PDF.'
-      );
-      if (wantPrint) {
-        showDatasheetModal(fxId, vId);
-        setTimeout(() => {
-          const frame = document.getElementById('datasheetFrame');
-          if (frame && frame.contentWindow) {
-            frame.contentWindow.focus();
-            frame.contentWindow.print();
-          }
-        }, 1000);
-        return;
-      }
+      // Server lacks headless Chrome: seamlessly open the exact modular template and trigger high-resolution print-to-PDF
+      showDatasheetModal(fxId, vId);
+      setTimeout(() => {
+        const frame = document.getElementById('datasheetFrame');
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.focus();
+          frame.contentWindow.print();
+        }
+      }, 800);
+      return;
     }
 
     const cd = r.headers.get('Content-Disposition') || '';
