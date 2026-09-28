@@ -208,15 +208,15 @@ function renderDatasheetTemplate($fixture, $variant, $forPdf = false) {
     $heroUrl = $resolveImage('hero');
     $heatSinkUrl = $resolveImage('heatsink');
     $chipUrl = $resolveImage('chip', 'template/chip.png');
-    $driverUrl = $resolveImage('driver', 'template/driver.png');
+    // Driver figure is a fixed brand asset (app/images/template/driver.png).
+    // Per-variant 'driver' paths in the JSON point to OCR crops that are missing/inconsistent.
+    $driverUrl = $resolveImage('driver_template', 'template/driver.png');
     $driverBodyUrl = $resolveImage('driver_body', 'template/driver_body.png');
 
-    // Web base URL
-    $cleanScriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
-    $baseDirUrl = rtrim(str_replace('\\', '/', dirname($cleanScriptName)), '/');
-    if ($baseDirUrl === '.' || $baseDirUrl === '/' || $baseDirUrl === '') {
-        $baseDirUrl = defined('WEB_BASE_URL') ? WEB_BASE_URL : '';
-    }
+    // Web base URL — always use the value computed by the front controller (index.php).
+    // Never derive it from SCRIPT_NAME here: under `php -S ... index.php` SCRIPT_NAME
+    // equals the request path (/api/fixtures/1/variants/0/html), which broke font/logo URLs.
+    $baseDirUrl = defined('WEB_BASE_URL') ? rtrim(WEB_BASE_URL, '/') : '';
 
     // Logo & Watermark
     $logoFile = BASE_DIR . '/assets/images/logo.svg';

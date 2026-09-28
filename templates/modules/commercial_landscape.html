@@ -61,6 +61,12 @@
             <tr><td class="lbl">Power Factor</td><td>{{ electricalSpecs.pf }}</td></tr>
           </tbody>
         </table>
+        {{#if product.driverImageUrl}}
+        <div style="text-align:center;margin:3mm 0 0;">
+          <img src="{{ product.driverImageUrl }}" alt="Short Circuit Driver" style="max-width:100%;max-height:28mm;object-fit:contain;display:inline-block;"/>
+          <div class="fig-caption" style="font-weight:700;font-size:10px;margin-top:1mm;">Short Circuit Driver</div>
+        </div>
+        {{/if}}
       </div>
 
       <!-- Photometric Data -->
