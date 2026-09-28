@@ -63,6 +63,12 @@ if ($baseDirUrl !== '' && strpos($path, $baseDirUrl) === 0) {
     $path = substr($path, strlen($baseDirUrl));
 }
 
+// Subdirectory installs: /ds -> /ds/ so relative asset URLs on the main page resolve correctly
+if ($baseDirUrl !== '' && rtrim($request_uri, '/') === $baseDirUrl && substr($request_uri, -1) !== '/') {
+    header('Location: ' . $baseDirUrl . '/', true, 301);
+    exit;
+}
+
 // Normalize path (ensure leading slash, strip trailing slash except root)
 $path = '/' . ltrim(rtrim($path, '/'), '/');
 if ($path === '//') {

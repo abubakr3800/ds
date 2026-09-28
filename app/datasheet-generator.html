@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SC Datasheet Generator</title>
-<script src="assets/js/html2pdf.bundle.min.js"></script>
 <style>
 @font-face {
   font-family: 'Anton';
@@ -1265,82 +1264,87 @@ window.downloadPDF = async function(fxId, vId) {
   }
 }
 
-// Client-side direct PDF compiler (renders exact modular template to downloadable PDF file)
+// Client-side PDF compiler.
+// Renders every .page of the datasheet separately (html2canvas) and assembles an A4 PDF (jsPDF).
+// Rendering page-by-page avoids the blank-page problem caused by one huge canvas
+// (browser canvas size limit) and by cloning iframe content out of its stylesheet.
+function loadScriptOnce(src, testFn) {
+  if (testFn()) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = () => (testFn() ? resolve() : reject(new Error('Library did not initialise: ' + src)));
+    s.onerror = () => reject(new Error('Failed to load ' + src));
+    document.head.appendChild(s);
+  });
+}
+
 async function exportClientPDF(fxId, vId, filename) {
-  if (typeof html2pdf === 'undefined') {
-    await new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = (window.BASE_URL || '') + '/assets/js/html2pdf.bundle.min.js';
-      s.onload = resolve;
-      s.onerror = () => {
-        const s2 = document.createElement('script');
-        s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-        s2.onload = resolve;
-        s2.onerror = reject;
-        document.head.appendChild(s2);
-      };
-      document.head.appendChild(s);
-    });
-  }
+  await loadScriptOnce(BASE_URL + '/assets/js/html2canvas.min.js', () => typeof window.html2canvas === 'function');
+  await loadScriptOnce(BASE_URL + '/assets/js/jspdf.umd.min.js', () => window.jspdf && window.jspdf.jsPDF);
 
-  // Check if modal frame is already active and displaying this fixture/variant
-  const modal = document.getElementById('datasheetModal');
-  const frame = document.getElementById('datasheetFrame');
-  const isModalActive = modal && modal.classList.contains('active') && frame && frame.contentDocument;
-
-  let targetElement;
-  let tempIframe = null;
-
-  if (isModalActive && selectedFixture && selectedFixture.id === fxId && selectedVariant === vId) {
-    targetElement = frame.contentDocument.querySelector('.sheet') || frame.contentDocument.body;
-  } else {
-    // Create a temporary hidden iframe to let browser fully render the HTML template
-    tempIframe = document.createElement('iframe');
-    tempIframe.style.position = 'fixed';
-    tempIframe.style.top = '0';
-    tempIframe.style.left = '0';
-    tempIframe.style.width = '794px';
-    tempIframe.style.height = '1123px';
-    tempIframe.style.opacity = '0.01';
-    tempIframe.style.zIndex = '-9999';
-    tempIframe.style.pointerEvents = 'none';
-    document.body.appendChild(tempIframe);
-
-    await new Promise((resolve, reject) => {
-      tempIframe.onload = resolve;
-      tempIframe.onerror = reject;
-      tempIframe.src = `${API_BASE}/fixtures/${fxId}/variants/${vId}/html`;
-    });
-    // Wait for polyline charts and fonts to stabilize
-    await new Promise(r => setTimeout(r, 400));
-    targetElement = tempIframe.contentDocument.querySelector('.sheet') || tempIframe.contentDocument.body;
-  }
-
-  const opt = {
-    margin: 0,
-    filename: filename,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: {
-      scale: 2,
-      useCORS: true,
-      logging: false,
-      width: 794,
-      windowWidth: 794
-    },
-    jsPDF: {
-      unit: 'mm',
-      format: 'a4',
-      orientation: 'portrait'
-    },
-    pagebreak: { mode: ['css', 'legacy'], before: '.page' }
-  };
+  const PAGE_W = 794, PAGE_H = 1123; // A4 @ 96dpi
+  const iframe = document.createElement('iframe');
+  iframe.style.cssText = `position:fixed;top:0;left:-10000px;width:${PAGE_W}px;height:${PAGE_H}px;border:0;`;
+  document.body.appendChild(iframe);
 
   try {
-    await html2pdf().set(opt).from(targetElement).save();
-  } finally {
-    if (tempIframe) {
-      tempIframe.remove();
+    await new Promise((resolve, reject) => {
+      iframe.onload = resolve;
+      iframe.onerror = () => reject(new Error('Could not load datasheet HTML'));
+      iframe.src = `${API_BASE}/fixtures/${fxId}/variants/${vId}/html`;
+    });
+
+    const doc = iframe.contentDocument;
+    if (doc.fonts && doc.fonts.ready) { try { await doc.fonts.ready; } catch (e) {} }
+    await Promise.all(Array.from(doc.images).map(img => img.complete ? null :
+      new Promise(r => { img.onload = img.onerror = r; })));
+    await new Promise(r => setTimeout(r, 300));
+
+    // Flat, print-like layout for capture: no screen margins / borders / shadows
+    const st = doc.createElement('style');
+    st.textContent = `
+      html, body { margin:0 !important; padding:0 !important; background:#fff !important; }
+      .page { margin:0 !important; border:0 !important; box-shadow:none !important;
+              width:${PAGE_W}px !important; box-sizing:border-box; }
+    `;
+    doc.head.appendChild(st);
+
+    const pages = Array.from(doc.querySelectorAll('.page'));
+    if (!pages.length) throw new Error('Datasheet has no pages to export');
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+    const A4_W = 210, A4_H = 297;
+    let first = true;
+
+    for (const pageEl of pages) {
+      const canvas = await window.html2canvas(pageEl, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+        windowWidth: PAGE_W
+      });
+      // Slice in case a page is taller than one A4 sheet
+      const sliceH = Math.round(canvas.width * (A4_H / A4_W));
+      const slices = Math.max(1, Math.round(canvas.height / sliceH * 100) / 100 > 1.02
+                              ? Math.ceil(canvas.height / sliceH) : 1);
+      for (let i = 0; i < slices; i++) {
+        const h = Math.min(sliceH, canvas.height - i * sliceH);
+        const part = document.createElement('canvas');
+        part.width = canvas.width; part.height = sliceH;
+        const ctx = part.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, part.width, part.height);
+        ctx.drawImage(canvas, 0, i * sliceH, canvas.width, h, 0, 0, canvas.width, h);
+        if (!first) pdf.addPage('a4', 'portrait');
+        pdf.addImage(part.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, A4_W, A4_H, undefined, 'FAST');
+        first = false;
+      }
     }
+    pdf.save(filename);
+  } finally {
+    iframe.remove();
   }
 }
 

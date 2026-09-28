@@ -225,7 +225,7 @@ function renderDatasheetTemplate($fixture, $variant, $forPdf = false) {
 
     // Font base
     if ($forPdf) {
-        $fontsBase = 'file:///' . str_replace('\\', '/', BASE_DIR);
+        $fontsBase = 'file:///' . ltrim(str_replace('\\', '/', BASE_DIR), '/');
     } else {
         $fontsBase = $baseDirUrl;
     }

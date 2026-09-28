@@ -93,10 +93,21 @@ function generateBrowserPDF($fixture, $variant) {
         throw new Exception("Could not write temporary HTML file for PDF generation");
     }
 
-    $fileUrl = 'file:///' . str_replace('\\', '/', $tempHtml);
+    $unixPath = str_replace('\\', '/', $tempHtml);
+    $fileUrl = 'file:///' . ltrim($unixPath, '/');
+    // Linux hosts: web user often has no writable HOME and cannot use the sandbox
+    $extra = '';
+    if (DIRECTORY_SEPARATOR === '/') {
+        $profile = sys_get_temp_dir() . '/' . $tempId . '_profile';
+        $extra = ' --user-data-dir="' . $profile . '"';
+        if (function_exists('posix_geteuid') && posix_geteuid() === 0) {
+            $extra .= ' --no-sandbox';
+        }
+    }
     $cmd = sprintf(
-        '"%s" --headless=new --disable-gpu --no-pdf-header-footer --disable-extensions --disable-background-networking --disable-sync --no-first-run --print-to-pdf="%s" "%s"',
+        '"%s" --headless=new --disable-gpu --no-pdf-header-footer --disable-extensions --disable-background-networking --disable-sync --no-first-run --virtual-time-budget=5000%s --print-to-pdf="%s" "%s" 2>&1',
         $browser,
+        $extra,
         $tempPdf,
         $fileUrl
     );
