@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="assets/js/html2pdf.bundle.min.js"></script>
 <style>
 :root {
   --sc-red: #eb1b26;
@@ -1166,6 +1167,7 @@ function generateDatasheet() {
 }
 
 // Download PDF
+// Download PDF — Directly downloads the modern modular PDF on any host
 window.downloadPDF = async function(fxId, vId) {
   const fx = DATA_BY_ID[fxId];
   const v = fx?.v?.find(x => x.id === vId) || fx?.v?.[vId] || fx?.v?.[0];
@@ -1175,61 +1177,118 @@ window.downloadPDF = async function(fxId, vId) {
   const modalPdfBtn = document.getElementById('modalPdfBtn');
   if (modalPdfBtn) { modalPdfBtn.disabled = true; modalPdfBtn.textContent = 'Generating PDF…'; }
 
+  // Default clean file name
+  let name = 'datasheet.pdf';
+  if (fx) {
+    const power = v?.power ? `_${v.power}W` : '';
+    const cleanName = (fx.name || 'datasheet').replace(/[^a-zA-Z0-9_\-\s]/g, '').trim().replace(/\s+/g, '_');
+    name = `${cleanName}${power}_Datasheet.pdf`;
+  }
+
   try {
     const r = await fetch(`${API_BASE}/fixtures/${fxId}/variants/${vId}/pdf`);
-    if (!r.ok) {
-      let errText = `HTTP ${r.status}`;
-      try {
-        const errJson = await r.json();
-        if (errJson.error) errText = errJson.error;
-      } catch (_) {}
-      throw new Error(errText);
-    }
-
     const pdfEngine = r.headers.get('X-PDF-Engine') || '';
-    if (pdfEngine === 'tcpdf-fallback') {
-      // Server lacks headless Chrome: seamlessly open the exact modular template and trigger high-resolution print-to-PDF
-      showDatasheetModal(fxId, vId);
-      setTimeout(() => {
-        const frame = document.getElementById('datasheetFrame');
-        if (frame && frame.contentWindow) {
-          frame.contentWindow.focus();
-          frame.contentWindow.print();
-        }
-      }, 800);
+
+    // If server has headless Chrome, download the server-compiled PDF:
+    if (r.ok && pdfEngine === 'headless-browser') {
+      const cd = r.headers.get('Content-Disposition') || '';
+      let srvName = (cd.match(/filename\*?=['"]?(?:UTF-8'')?([^";\r\n]+)['"]?/i) || [])[1];
+      if (srvName) {
+        name = decodeURIComponent(srvName.replace(/^UTF-8''/i, '').replace(/^"|"$/g, ''));
+      }
+      const blob = await r.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
       return;
     }
 
-    const cd = r.headers.get('Content-Disposition') || '';
-    let name = (cd.match(/filename\*?=['"]?(?:UTF-8'')?([^";\r\n]+)['"]?/i) || [])[1];
-    if (name) {
-      name = decodeURIComponent(name.replace(/^UTF-8''/i, '').replace(/^"|"$/g, ''));
-    }
-    if (!name || name === 'datasheet.pdf') {
-      if (fx) {
-        const power = v?.power ? `_${v.power}W` : '';
-        const cleanName = (fx.name || 'datasheet').replace(/[^a-zA-Z0-9_\-\s]/g, '').trim().replace(/\s+/g, '_');
-        name = `${cleanName}${power}_Datasheet.pdf`;
-      } else {
-        name = 'datasheet.pdf';
-      }
-    }
+    // If server lacks headless Chrome (tcpdf-fallback):
+    // Compile and download the exact current modular PDF directly in the browser!
+    await exportClientPDF(fxId, vId, name);
 
-    const blob = await r.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = name;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
   } catch (e) {
-    console.error('PDF export failed:', e);
-    alert('PDF export failed: ' + e.message);
+    console.warn('Server PDF failed or not available, falling back to direct client export:', e);
+    try {
+      await exportClientPDF(fxId, vId, name);
+    } catch (clientErr) {
+      console.error('PDF export failed:', clientErr);
+      alert('PDF export failed: ' + clientErr.message);
+    }
   } finally {
     triggerButtons.forEach(b => { b.disabled = false; if (b.dataset.origText) b.textContent = b.dataset.origText; });
     if (modalPdfBtn) { modalPdfBtn.disabled = false; modalPdfBtn.textContent = '⬇ Download PDF'; }
+  }
+}
+
+// Client-side direct PDF compiler (renders exact modular template to downloadable PDF file)
+async function exportClientPDF(fxId, vId, filename) {
+  if (typeof html2pdf === 'undefined') {
+    await new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = (window.BASE_URL || '') + '/assets/js/html2pdf.bundle.min.js';
+      s.onload = resolve;
+      s.onerror = () => {
+        const s2 = document.createElement('script');
+        s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+        s2.onload = resolve;
+        s2.onerror = reject;
+        document.head.appendChild(s2);
+      };
+      document.head.appendChild(s);
+    });
+  }
+
+  const r = await fetch(`${API_BASE}/fixtures/${fxId}/variants/${vId}/html`);
+  if (!r.ok) throw new Error(`HTML template fetch failed: HTTP ${r.status}`);
+  const html = await r.text();
+
+  const container = document.createElement('div');
+  container.style.position = 'fixed';
+  container.style.left = '-9999px';
+  container.style.top = '0';
+  container.style.width = '794px';
+  container.style.zIndex = '-9999';
+  container.style.background = '#ffffff';
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+
+  doc.querySelectorAll('style, link[rel="stylesheet"]').forEach(el => {
+    container.appendChild(el.cloneNode(true));
+  });
+
+  const sheet = doc.querySelector('.sheet') || doc.body;
+  container.appendChild(sheet.cloneNode(true));
+  document.body.appendChild(container);
+
+  const opt = {
+    margin: 0,
+    filename: filename,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      windowWidth: 794
+    },
+    jsPDF: {
+      unit: 'mm',
+      format: 'a4',
+      orientation: 'portrait'
+    },
+    pagebreak: { mode: ['css', 'legacy'], before: '.page' }
+  };
+
+  try {
+    await html2pdf().set(opt).from(container).save();
+  } finally {
+    container.remove();
   }
 }
 
