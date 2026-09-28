@@ -1279,9 +1279,11 @@ function loadScriptOnce(src, testFn) {
   });
 }
 
+const EXPORT_VER = 'v2-perpage';
 async function exportClientPDF(fxId, vId, filename) {
-  await loadScriptOnce(BASE_URL + '/assets/js/html2canvas.min.js', () => typeof window.html2canvas === 'function');
-  await loadScriptOnce(BASE_URL + '/assets/js/jspdf.umd.min.js', () => window.jspdf && window.jspdf.jsPDF);
+  console.info('SC PDF export', EXPORT_VER);
+  await loadScriptOnce(BASE_URL + '/assets/js/html2canvas.min.js?' + EXPORT_VER, () => typeof window.html2canvas === 'function');
+  await loadScriptOnce(BASE_URL + '/assets/js/jspdf.umd.min.js?' + EXPORT_VER, () => window.jspdf && window.jspdf.jsPDF);
 
   const PAGE_W = 794, PAGE_H = 1123; // A4 @ 96dpi
   const iframe = document.createElement('iframe');

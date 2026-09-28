@@ -122,6 +122,10 @@ function serveHTML() {
         die('HTML application file not found at: ' . htmlspecialchars($html_file));
     }
     header('Content-Type: text/html; charset=utf-8');
+    // Never let browsers/CDNs keep an old copy of the app shell (stale JS caused blank PDFs)
+    header('Cache-Control: no-cache, no-store, must-revalidate');
+    header('Pragma: no-cache');
+    header('Expires: 0');
     readfile($html_file);
 }
 
