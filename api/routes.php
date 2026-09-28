@@ -216,7 +216,7 @@ function handleGetVariantPDF($fixtureId, $variantId) {
 
         // Send PDF response with full CORS expose headers
         header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Expose-Headers: Content-Disposition, Content-Length');
+        header('Access-Control-Expose-Headers: Content-Disposition, Content-Length, X-PDF-Engine');
         header('Content-Type: application/pdf');
         header('Content-Disposition: attachment; filename="' . $filename . '"; filename*=UTF-8\'\'' . rawurlencode($filename));
         header('Content-Length: ' . strlen($pdf));

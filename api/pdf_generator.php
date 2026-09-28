@@ -19,10 +19,14 @@ require_once __DIR__ . '/template_renderer.php';
 function generatePDF($fixture, $variant) {
     // 1. Try modern headless browser generation for exact v2 template
     try {
-        return generateBrowserPDF($fixture, $variant);
+        $pdf = generateBrowserPDF($fixture, $variant);
+        header('X-PDF-Engine: headless-browser');
+        return $pdf;
     } catch (\Throwable $e) {
         error_log("Headless browser PDF generation failed, falling back to TCPDF: " . $e->getMessage());
     }
+
+    header('X-PDF-Engine: tcpdf-fallback');
 
     // 2. Try TCPDF
     if (!class_exists('TCPDF') && file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
@@ -47,12 +51,27 @@ function findHeadlessBrowser() {
         'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe',
         'C:\Program Files\Microsoft\Edge\Application\msedge.exe',
         '/usr/bin/google-chrome',
+        '/usr/bin/google-chrome-stable',
         '/usr/bin/chromium-browser',
         '/usr/bin/chromium',
+        '/snap/bin/chromium',
+        '/usr/local/bin/chrome',
+        '/usr/local/bin/chromium',
     ];
     foreach ($paths as $p) {
-        if (file_exists($p)) return $p;
+        if (@file_exists($p)) return $p;
     }
+
+    // Check PATH on Unix/Linux systems if exec is available
+    if (DIRECTORY_SEPARATOR === '/' && function_exists('exec')) {
+        foreach (['google-chrome', 'google-chrome-stable', 'chromium-browser', 'chromium'] as $bin) {
+            $which = trim(@exec("which $bin 2>/dev/null"));
+            if (!empty($which) && @file_exists($which)) {
+                return $which;
+            }
+        }
+    }
+
     return null;
 }
 
