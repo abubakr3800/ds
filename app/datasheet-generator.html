@@ -1244,28 +1244,38 @@ async function exportClientPDF(fxId, vId, filename) {
     });
   }
 
-  const r = await fetch(`${API_BASE}/fixtures/${fxId}/variants/${vId}/html`);
-  if (!r.ok) throw new Error(`HTML template fetch failed: HTTP ${r.status}`);
-  const html = await r.text();
+  // Check if modal frame is already active and displaying this fixture/variant
+  const modal = document.getElementById('datasheetModal');
+  const frame = document.getElementById('datasheetFrame');
+  const isModalActive = modal && modal.classList.contains('active') && frame && frame.contentDocument;
 
-  const container = document.createElement('div');
-  container.style.position = 'fixed';
-  container.style.left = '-9999px';
-  container.style.top = '0';
-  container.style.width = '794px';
-  container.style.zIndex = '-9999';
-  container.style.background = '#ffffff';
+  let targetElement;
+  let tempIframe = null;
 
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
+  if (isModalActive && selectedFixture && selectedFixture.id === fxId && selectedVariant === vId) {
+    targetElement = frame.contentDocument.querySelector('.sheet') || frame.contentDocument.body;
+  } else {
+    // Create a temporary hidden iframe to let browser fully render the HTML template
+    tempIframe = document.createElement('iframe');
+    tempIframe.style.position = 'fixed';
+    tempIframe.style.top = '0';
+    tempIframe.style.left = '0';
+    tempIframe.style.width = '794px';
+    tempIframe.style.height = '1123px';
+    tempIframe.style.opacity = '0.01';
+    tempIframe.style.zIndex = '-9999';
+    tempIframe.style.pointerEvents = 'none';
+    document.body.appendChild(tempIframe);
 
-  doc.querySelectorAll('style, link[rel="stylesheet"]').forEach(el => {
-    container.appendChild(el.cloneNode(true));
-  });
-
-  const sheet = doc.querySelector('.sheet') || doc.body;
-  container.appendChild(sheet.cloneNode(true));
-  document.body.appendChild(container);
+    await new Promise((resolve, reject) => {
+      tempIframe.onload = resolve;
+      tempIframe.onerror = reject;
+      tempIframe.src = `${API_BASE}/fixtures/${fxId}/variants/${vId}/html`;
+    });
+    // Wait for polyline charts and fonts to stabilize
+    await new Promise(r => setTimeout(r, 400));
+    targetElement = tempIframe.contentDocument.querySelector('.sheet') || tempIframe.contentDocument.body;
+  }
 
   const opt = {
     margin: 0,
@@ -1275,6 +1285,7 @@ async function exportClientPDF(fxId, vId, filename) {
       scale: 2,
       useCORS: true,
       logging: false,
+      width: 794,
       windowWidth: 794
     },
     jsPDF: {
@@ -1286,9 +1297,11 @@ async function exportClientPDF(fxId, vId, filename) {
   };
 
   try {
-    await html2pdf().set(opt).from(container).save();
+    await html2pdf().set(opt).from(targetElement).save();
   } finally {
-    container.remove();
+    if (tempIframe) {
+      tempIframe.remove();
+    }
   }
 }
 
